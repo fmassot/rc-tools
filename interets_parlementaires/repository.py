@@ -23,8 +23,20 @@ class ParlementarianRepository(Repository):
     def __init(self, db=mysql_db):
         super(ParlementarianRepository, self).__init__(self, db)
 
-    def get_all_parlementarians(self):
-        sql = "SELECT DISTINCT parlementaire FROM documents"
+    def get_parlementarians(self, type='all'):
+        if type == 'all':
+            like = '%'
+        elif type == 'depute':
+            like = 'http://www.nosdeputes.fr%'
+        elif type == 'senateur':
+            like = 'http://www.nossenateurs.fr%'
+
+        sql = "SELECT DISTINCT parlementaire FROM documents WHERE parlementaire_avatarurl LIKE %s"
+        self.cursor.execute(sql, (like,))
+        return zip(*self.cursor.fetchall())[0]
+
+    def get_senateurs(self):
+        sql = "SELECT DISTINCT parlementaire FROM documents WHERE url LIKE "
         self.cursor.execute(sql)
         return zip(*self.cursor.fetchall())[0]
 

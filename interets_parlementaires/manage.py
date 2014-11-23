@@ -4,7 +4,7 @@ import click
 
 from json import loads
 from commons.utf8_csv import UnicodeWriter
-from .repository import ParlementarianRepository
+from .repository import ParlementarianRepository, ParlementarianDataType
 
 NO_DATA_STRING = u'NÉANT'
 
@@ -13,31 +13,34 @@ def cli():
     pass
 
 @cli.command()
-@cli.argument('type')
-@cli.argument('output')
-def export(type, output):
+@cli.optional('parlementarian_type', default='all')
+def export(parlementarian_type):
     repository = ParlementarianRepository()
-    parlementarians = repository.get_all_parlementarians()
-    all_data = repository.get_data_by_type(type)
+    parlementarians = repository.get_parlementarians(type=parlementarian_type)
 
-    data_by_parlementarian = dict((parlementarian, loads(json_data) for parlementarian, json_data in all_data))
+    for data_type, data_type_name in ParlementarianDataType.items():
+        all_data = repository.get_data_by_type(data_type)
 
-    rows = []
-    for parlementarian in parlementarians:
-        if parlementarian in data_by_parlementarian:
-            row = [parlementarian]
-            for element in data_by_parlementarian[parlementarian]:
-                rows.append(row + [element])
-        else:
-            row = [parlementarian, NO_DATA_STRING]
-            rows.append(row)
+        data_by_parlementarian = dict((parlementarian, loads(json_data) for parlementarian, json_data in all_data))
 
-    rows.sort()
+        rows = []
+        for parlementarian in parlementarians:
+            if parlementarian in data_by_parlementarian:
+                for element in data_by_parlementarian[parlementarian]:
+                    row = [parlementarian]
+                    for subelement in element:
+                        row.append(subelement.replace('/néant/i', NO_DATA_STRING))
+                    rows.append(row)
+            else:
+                row = [parlementarian, NO_DATA_STRING]
+                rows.append(row)
 
-    writer = UnicodeWriter(output)
-    writer.writerows(rows)
+            rows.sort()
+
+            with open('%s_%s' % (data_type_name, data_type), 'w') as f:
+                writer = UnicodeWriter(f)
+                writer.writerows(rows)
+
 
 if __name__ == '__main__':
     cli()
-
-
