@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from commons.repository import Repository
-from .db import mysql_db
+from interets_parlementaires.db import mysql_db
 
 ParlementarianDataType = {
     1: u'donnees_personnelles',
@@ -20,7 +20,7 @@ ParlementarianDataType = {
 
 
 class ParlementarianRepository(Repository):
-    def __init(self, db=mysql_db):
+    def __init__(self, db=mysql_db):
         super(ParlementarianRepository, self).__init__(self, db)
 
     def get_parlementarians(self, type='all'):

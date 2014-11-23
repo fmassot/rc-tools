@@ -6,7 +6,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 from json import loads
 from commons.utf8_csv import UnicodeWriter
-from .repository import ParlementarianRepository, ParlementarianDataType
+from interets_parlementaires.repository import ParlementarianRepository, ParlementarianDataType
 
 NO_DATA_STRING = u'NÉANT'
 
@@ -15,7 +15,7 @@ def cli():
     pass
 
 @cli.command()
-@cli.optional('parlementarian_type', default='all')
+@cli.optio('--parlementarian_type', default='all')
 def export(parlementarian_type):
     repository = ParlementarianRepository()
     parlementarians = repository.get_parlementarians(type=parlementarian_type)
