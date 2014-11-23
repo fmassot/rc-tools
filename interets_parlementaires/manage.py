@@ -4,7 +4,7 @@ import click
 
 from json import loads
 from commons.utf8_csv import UnicodeWriter
-from .repository import ParliamentarianRepository
+from .repository import ParlementarianRepository
 
 NO_DATA_STRING = u'NÉANT'
 
@@ -16,7 +16,7 @@ def cli():
 @cli.argument('type')
 @cli.argument('output')
 def export(type, output):
-    repository = ParliamentarianRepository()
+    repository = ParlementarianRepository()
     parlementarians = repository.get_all_parlementarians()
     all_data = repository.get_data_by_type(type)
 

@@ -19,9 +19,9 @@ ParlementarianDataType = {
 }
 
 
-class ParliamentarianRepository(Repository):
+class ParlementarianRepository(Repository):
     def __init(self, db=mysql_db):
-        super(ParliamentarianRepository, self).__init__(self, db)
+        super(ParlementarianRepository, self).__init__(self, db)
 
     def get_all_parlementarians(self):
         sql = "SELECT DISTINCT parlementaire FROM documents"
