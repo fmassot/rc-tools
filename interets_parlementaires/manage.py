@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import click
-
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).absolute().parents[1]))
 from json import loads
 from commons.utf8_csv import UnicodeWriter
 from .repository import ParlementarianRepository, ParlementarianDataType
@@ -21,7 +23,7 @@ def export(parlementarian_type):
     for data_type, data_type_name in ParlementarianDataType.items():
         all_data = repository.get_data_by_type(data_type)
 
-        data_by_parlementarian = dict((parlementarian, loads(json_data) for parlementarian, json_data in all_data))
+        data_by_parlementarian = dict([(parlementarian, loads(json_data)) for parlementarian, json_data in all_data])
 
         rows = []
         for parlementarian in parlementarians:
