@@ -17,8 +17,11 @@ def cli():
 
 @cli.command()
 @click.option('--parlementarian_type', default='all', help='all|senateur|depute')
-@click.option('--output-dir', default='~/')
+@click.option('--output-dir', default=None)
 def export(parlementarian_type, output_dir):
+    if not output_dir:
+        output_dir = os.getcwd()
+
     repository = ParlementarianRepository()
     parlementarians = repository.get_parlementarians(ptype=parlementarian_type)
 
