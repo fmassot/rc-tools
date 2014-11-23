@@ -18,7 +18,7 @@ def cli():
 @click.option('--parlementarian_type', default='all', help='all|senateur|depute')
 def export(parlementarian_type):
     repository = ParlementarianRepository()
-    parlementarians = repository.get_parlementarians(type=parlementarian_type)
+    parlementarians = repository.get_parlementarians(ptype=parlementarian_type)
 
     for data_type, data_type_name in ParlementarianDataType.items():
         all_data = repository.get_data_by_type(data_type)
