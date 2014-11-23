@@ -39,7 +39,7 @@ def export(parlementarian_type):
 
             rows.sort()
 
-            with open('%s_%s' % (data_type_name, data_type), 'w') as f:
+            with open('%s_%s.csv' % (data_type_name, data_type), 'w') as f:
                 writer = UnicodeWriter(f)
                 writer.writerows(rows)
 
