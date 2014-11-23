@@ -15,7 +15,7 @@ def cli():
     pass
 
 @cli.command()
-@cli.optio('--parlementarian_type', default='all')
+@cli.option('--parlementarian_type', default='all')
 def export(parlementarian_type):
     repository = ParlementarianRepository()
     parlementarians = repository.get_parlementarians(type=parlementarian_type)
