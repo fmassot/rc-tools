@@ -45,7 +45,7 @@ def export(parlementarian_type, output_dir):
             rows.sort()
 
             with open(os.path.join(output_dir, '%s_%s.csv' % (data_type_name, data_type)), 'w') as f:
-                writer = UnicodeWriter(f)
+                writer = UnicodeWriter(f, delimiter=';')
                 writer.writerows(rows)
 
 
