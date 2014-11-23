@@ -15,7 +15,7 @@ def cli():
     pass
 
 @cli.command()
-@cli.option('--parlementarian_type', default='all')
+@click.option('--parlementarian_type', default='all', help='all|senateur|depute')
 def export(parlementarian_type):
     repository = ParlementarianRepository()
     parlementarians = repository.get_parlementarians(type=parlementarian_type)
@@ -31,7 +31,7 @@ def export(parlementarian_type):
                 for element in data_by_parlementarian[parlementarian]:
                     row = [parlementarian]
                     for subelement in element:
-                        row.append(subelement.replace('/néant/i', NO_DATA_STRING))
+                        row.append(subelement.replace(u'/néant/i', NO_DATA_STRING))
                     rows.append(row)
             else:
                 row = [parlementarian, NO_DATA_STRING]

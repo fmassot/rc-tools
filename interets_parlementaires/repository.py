@@ -21,14 +21,14 @@ ParlementarianDataType = {
 
 class ParlementarianRepository(Repository):
     def __init__(self, db=mysql_db):
-        super(ParlementarianRepository, self).__init__(self, db)
+        super(ParlementarianRepository, self).__init__(db)
 
-    def get_parlementarians(self, type='all'):
-        if type == 'all':
+    def get_parlementarians(self, ptype='all'):
+        if ptype == 'all':
             like = '%'
-        elif type == 'depute':
+        elif ptype == 'depute':
             like = 'http://www.nosdeputes.fr%'
-        elif type == 'senateur':
+        elif ptype == 'senateur':
             like = 'http://www.nossenateurs.fr%'
 
         sql = "SELECT DISTINCT parlementaire FROM documents WHERE parlementaire_avatarurl LIKE %s"
