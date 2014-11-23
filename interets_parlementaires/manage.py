@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import click
+import os
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
@@ -16,7 +17,8 @@ def cli():
 
 @cli.command()
 @click.option('--parlementarian_type', default='all', help='all|senateur|depute')
-def export(parlementarian_type):
+@click.option('--output-dir', default='~/')
+def export(parlementarian_type, output_dir):
     repository = ParlementarianRepository()
     parlementarians = repository.get_parlementarians(ptype=parlementarian_type)
 
@@ -39,7 +41,7 @@ def export(parlementarian_type):
 
             rows.sort()
 
-            with open('%s_%s.csv' % (data_type_name, data_type), 'w') as f:
+            with open(os.path.join(output_dir, '%s_%s.csv' % (data_type_name, data_type)), 'w') as f:
                 writer = UnicodeWriter(f)
                 writer.writerows(rows)
 
