@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pymysql import connect
-
+from pymysql.cursors import DictCursor
 
 class Repository(object):
     def __init__(self, db=None):
@@ -19,7 +19,7 @@ class Repository(object):
     @property
     def cursor(self):
         if self._cursor is None:
-            self._cursor = self.conn.cursor()
+            self._cursor = self.conn.cursor(DictCursor)
 
         return self._cursor
 
