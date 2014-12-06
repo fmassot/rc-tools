@@ -30,11 +30,3 @@ class AmendementService(object):
 
     def get_amendements(self):
         pass
-
-
-class QuestionService(object):
-    def get(self, url):
-        return requests.get(url).data
-
-    def parse(self, url):
-        data = self.get(url)
