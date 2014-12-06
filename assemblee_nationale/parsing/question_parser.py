@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from collections import OrderedDict
-from bs4 import BeautifulSoup, BeautifulStoneSoup
+from bs4 import BeautifulSoup
 
 
 _clean_html_re = re.compile("<.*?>")
@@ -62,9 +61,7 @@ def extract_span(t):
 
 
 def parse_question(url, html):
-    import pdb
-
-    extracted_data = OrderedDict.fromkeys(field_order, '')
+    extracted_data = dict.fromkeys(field_order, '')
     leg_reg = re.compile(r'^.*nationale.fr/q(\d+)/.*$')
     extracted_data['legislature'] = leg_reg.sub(r'\1', url)
     extracted_data['type'] = 'QE'
@@ -147,8 +144,7 @@ def parse_question(url, html):
         r = s.find(text=re.compile(u'^\s*Texte de la r\xe9ponse\s*$'))
         extracted_data['reponse'] = extract_text(r)
 
-    file_reg = re.compile(r'^.*/([^/]+)$')
-    extracted_data['source'] = file_reg.sub(r'\1', url).replace('_', '/')
+    extracted_data['source'] = url
     extracted_data['motif_retrait'] = extracted_data['motif_retrait'].lower()
 
     for k, v in extracted_data.iteritems():
