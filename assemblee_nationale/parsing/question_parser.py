@@ -156,4 +156,5 @@ def parse_question(url, html):
 
 if __name__ == '__main__':
     filepath = sys.argv[1].replace('_', '/')
-    parse_question(open(filepath, 'r'))
+    parsed_data = parse_question(open(filepath, 'r'))
+    print "{%s}" % ", ".join('"%s": "%s"' % (k, parsed_data[k]) for k in field_order)
