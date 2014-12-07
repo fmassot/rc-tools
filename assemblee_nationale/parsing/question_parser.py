@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import sys
 from bs4 import BeautifulSoup
 
 
@@ -151,3 +152,8 @@ def parse_question(url, html):
         extracted_data[k] = v.encode('utf8').replace('\\', '\\\\').replace('"', '\\"')
 
     return extracted_data
+
+
+if __name__ == '__main__':
+    filepath = sys.argv[1].replace('_', '/')
+    parse_question(open(filepath, 'r'))
