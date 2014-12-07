@@ -69,7 +69,7 @@ def export(parlementaire_type, output_dir):
 
             with open(os.path.join(output_dir, '%02d_%s.csv' % (data_type, data_type_name)), 'w') as f:
                 # choose '|' as quote to avoid double single or double quotes
-                writer = UnicodeWriter(f, delimiter=';', quote='|', lineterminator='\n')
+                writer = UnicodeWriter(f, delimiter=';', quotechar='|', lineterminator='\n')
                 writer.writerow(headers_by_data_type[data_type].split(';'))
                 writer.writerows(rows)
 
