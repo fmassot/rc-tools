@@ -19,11 +19,11 @@ ParlementarianDataType = {
 }
 
 
-class ParlementarianRepository(Repository):
+class ParlementaireRepository(Repository):
     def __init__(self, db=mysql_db):
-        super(ParlementarianRepository, self).__init__(db)
+        super(ParlementaireRepository, self).__init__(db)
 
-    def get_parlementarians(self, ptype='all'):
+    def get_parlementaires(self, ptype='all'):
         if ptype == 'all':
             like = '%'
         elif ptype == 'depute':
@@ -33,12 +33,7 @@ class ParlementarianRepository(Repository):
 
         sql = "SELECT DISTINCT parlementaire FROM documents WHERE parlementaire_avatarurl LIKE %s"
         self.cursor.execute(sql, (like,))
-        return zip(*self.cursor.fetchall())[0]
-
-    def get_senateurs(self):
-        sql = "SELECT DISTINCT parlementaire FROM documents WHERE url LIKE "
-        self.cursor.execute(sql)
-        return zip(*self.cursor.fetchall())[0]
+        return [row['parlementaire'] for row in self.cursor.fetchall()]
 
     def get_data_by_type(self, type):
         sql = """SELECT parlementaire, data FROM tasks, documents
