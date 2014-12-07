@@ -17,7 +17,7 @@ def cli():
     pass
 
 @cli.command()
-@click.option('--parlementaire_type', default='all', help='all|senateur|depute')
+@click.option('--parlementaire-type', default='all', help='all|senateur|depute')
 @click.option('--output-dir', default=None)
 def export(parlementaire_type, output_dir):
     if not output_dir:
