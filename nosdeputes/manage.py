@@ -24,9 +24,9 @@ def make_liasse(texteloi_id, output_filename):
         file.write(u'%s amendements\n' % len(amendements))
 
         for amendement in amendements:
-            file.write(u'   %s -- %s -- de %s\n' % (amendement['numero'], amendement['sujet'], amendement['signataires']))
-            file.write(u'     %s\n' % (amendement['texte'],))
-            file.write(u'     EXPOSE : %s\n' % (amendement['expose'],))
+            file.write(u'   %s -- %s -- de %s\n' % (amendement.numero, amendement.sujet, amendement.signataires))
+            file.write(u'     %s\n' % (amendement.texte,))
+            file.write(u'     EXPOSE : %s\n' % (amendement.expose,))
 
 
 if __name__ == '__main__':

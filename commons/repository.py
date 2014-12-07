@@ -3,11 +3,14 @@
 from pymysql import connect
 from pymysql.cursors import DictCursor
 
+
 class Repository(object):
-    def __init__(self, db=None):
+    def __init__(self, db=None, cursorclass=DictCursor):
         self.db = db
+        self.cursorclass = cursorclass
         self._cursor = None
         self._conn = None
+
 
     @property
     def conn(self):
@@ -19,7 +22,7 @@ class Repository(object):
     @property
     def cursor(self):
         if self._cursor is None:
-            self._cursor = self.conn.cursor(DictCursor)
+            self._cursor = self.conn.cursor(cursor=self.cursorclass)
 
         return self._cursor
 
