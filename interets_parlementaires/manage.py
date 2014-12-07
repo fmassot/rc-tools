@@ -16,24 +16,24 @@ def cli():
     pass
 
 @cli.command()
-@click.option('--parlementarian_type', default='all', help='all|senateur|depute')
+@click.option('--parlementaire_type', default='all', help='all|senateur|depute')
 @click.option('--output-dir', default=None)
-def export(parlementarian_type, output_dir):
+def export(parlementaire_type, output_dir):
     if not output_dir:
         output_dir = os.getcwd()
 
     repository = ParlementarianRepository()
-    parlementarians = repository.get_parlementarians(ptype=parlementarian_type)
+    parlementaires = repository.get_parlementarians(ptype=parlementaire_type)
 
     for data_type, data_type_name in ParlementarianDataType.items():
         all_data = repository.get_data_by_type(data_type)
 
-        data_by_parlementarian = dict([(parlementarian, loads(json_data)) for parlementarian, json_data in all_data])
+        data_by_parlementaire = dict([(row['parlementaire'], loads(row['data'])) for row in all_data])
 
         rows = []
-        for parlementarian in parlementarians:
-            if parlementarian in data_by_parlementarian:
-                for element in data_by_parlementarian[parlementarian]:
+        for parlementarian in parlementaires:
+            if parlementarian in data_by_parlementaire:
+                for element in data_by_parlementaire[parlementarian]:
                     row = [parlementarian]
                     for subelement in element:
                         row.append(subelement.replace(u'/néant/i', NO_DATA_STRING))
