@@ -1,4 +1,9 @@
 [interets_parlementaires]
-user=
-passwd=
-db=
+user=rc
+passwd=rc
+db=interets_parlementaires
+
+[nosdeputes]
+user=rc
+passwd=rc
+db=nosdeputes
