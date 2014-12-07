@@ -58,7 +58,7 @@ def export(parlementaire_type, output_dir):
                 for element in parlementaire_data:
                     row = [parlementaire]
                     for sub_element in element:
-                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'n[é,e,\xc9]ant(?i)', NO_DATA_STRING, sub_element)))
+                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'n[é,e]ant(?i)', NO_DATA_STRING, sub_element)))
                     rows.append(row)
 
             else:
