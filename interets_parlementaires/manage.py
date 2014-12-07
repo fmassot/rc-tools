@@ -58,7 +58,7 @@ def export(parlementaire_type, output_dir):
                 for element in parlementaire_data:
                     row = [parlementaire]
                     for sub_element in element:
-                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'n[é,e]ant(?i)', NO_DATA_STRING, sub_element)))
+                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'n[é,e,\xc9]ant(?i)', NO_DATA_STRING, sub_element)))
                     rows.append(row)
 
             else:
@@ -68,7 +68,8 @@ def export(parlementaire_type, output_dir):
             rows.sort()
 
             with open(os.path.join(output_dir, '%02d_%s.csv' % (data_type, data_type_name)), 'w') as f:
-                writer = UnicodeWriter(f, delimiter=';')
+                # choose '|' as quote to avoid double single or double quotes
+                writer = UnicodeWriter(f, delimiter=';', quote='|', lineterminator='\n')
                 writer.writerow(headers_by_data_type[data_type].split(';'))
                 writer.writerows(rows)
 
