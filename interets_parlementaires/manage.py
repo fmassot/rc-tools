@@ -53,12 +53,12 @@ def export(parlementaire_type, output_dir):
                 parlementaire_data = data_by_parlementaire[parlementaire]
 
                 if type(parlementaire_data) == unicode:
-                    parlementaire_data = [[parlementaire_data]]
+                    parlementaire_data = [[NO_DATA_STRING]]
 
                 for element in parlementaire_data:
                     row = [parlementaire]
                     for sub_element in element:
-                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'néant(?i)', NO_DATA_STRING, sub_element)))
+                        row.append(re.sub(r'[\n\r]+', ' ', re.sub(u'n[é,e]ant(?i)', NO_DATA_STRING, sub_element)))
                     rows.append(row)
 
             else:
@@ -69,7 +69,7 @@ def export(parlementaire_type, output_dir):
 
             with open(os.path.join(output_dir, '%02d_%s.csv' % (data_type, data_type_name)), 'w') as f:
                 writer = UnicodeWriter(f, delimiter=';')
-                writer.writerow([headers_by_data_type[data_type]])
+                writer.writerow(headers_by_data_type[data_type].split(';'))
                 writer.writerows(rows)
 
 
