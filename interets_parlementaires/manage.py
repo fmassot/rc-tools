@@ -31,15 +31,15 @@ def export(parlementaire_type, output_dir):
         data_by_parlementaire = dict([(row['parlementaire'], loads(row['data'])) for row in all_data])
 
         rows = []
-        for parlementarian in parlementaires:
-            if parlementarian in data_by_parlementaire:
-                for element in data_by_parlementaire[parlementarian]:
-                    row = [parlementarian]
-                    for subelement in element:
-                        row.append(subelement.replace(u'/néant/i', NO_DATA_STRING))
+        for parlementaire in parlementaires:
+            if parlementaire in data_by_parlementaire:
+                for element in data_by_parlementaire[parlementaire]:
+                    row = [parlementaire]
+                    for sub_element in element:
+                        row.append(sub_element.replace(u'/néant/i', NO_DATA_STRING))
                     rows.append(row)
             else:
-                row = [parlementarian, NO_DATA_STRING]
+                row = [parlementaire, NO_DATA_STRING]
                 rows.append(row)
 
             rows.sort()
