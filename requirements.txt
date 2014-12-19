@@ -3,3 +3,4 @@ beautifulsoup4==4.3.2
 click==3.3
 pathlib==1.0.1
 requests==2.5.0
+addict==0.2.7

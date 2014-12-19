@@ -17,7 +17,17 @@ class AmendementRepository(Repository):
         self.cursor.execute("SELECT * FROM amendement WHERE numero = %s", (numero,))
         return self.cursor.fetchone()
 
-    def get_by_texteloi_id(self, texteloi_id):
+    def get(self, numero, legislature, loi, rectif):
+        self.cursor.execute(
+            """SELECT * FROM amendement
+            WHERE numero = %s AND legislature = %s AND loi = %s AND rectif = %s
+            """,
+            (numero, legislature, loi, rectif)
+        )
+
+        return self.cursor.fetchone()
+
+    def find_by_texteloi_id(self, texteloi_id):
         self.cursor.execute("SELECT * FROM amendement WHERE texteloi_id = %s", (texteloi_id,))
         return self.cursor.fetchall()
 
@@ -30,10 +40,3 @@ class ParlementaireRepository(Repository):
     def __init__(self, db=mysql_db):
         super(ParlementaireRepository, self).__init__(db, cursorclass=ParlementaireCursor)
 
-    def get_by_numero(self, numero):
-        self.cursor.execute("SELECT * FROM amendement WHERE numero = %s", (numero,))
-        return self.cursor.fetchone()
-
-    def get_by_texteloi_id(self, texteloi_id):
-        self.cursor.execute("SELECT * FROM amendement WHERE texteloi_id = %s", (texteloi_id,))
-        return self.cursor.fetchall()
