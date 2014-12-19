@@ -1,11 +1,7 @@
 rc-tools
 ========
 
-.. contents::
-..
-
-.. image:: https://travis-ci.org/fmassot/rc-tools.png?branch=master
-   :target: https://travis-ci.org/fmassot/fmassot
+[![Build Status](https://travis-ci.org/fmassot/rc-tools.svg)](https://travis-ci.org/fmassot/rc-tools)
 
 Launch tests :
 
