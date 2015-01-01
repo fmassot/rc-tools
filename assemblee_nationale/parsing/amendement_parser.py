@@ -24,7 +24,12 @@ def parse_amendements_json_response(json_response):
 
         amendements.append(amendement)
 
-    return amendements
+    return Dict({
+        'total_count': json_response['infoGenerales']['nb_resultats'],
+        'page': json_response['infoGenerales']['debut'],
+        'size': json_response['infoGenerales']['nb_docs'],
+        'amendements': amendements
+    })
 
 
 def parse_amendement_html(html_response):

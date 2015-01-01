@@ -42,9 +42,12 @@ class AmendementParsingTest(unittest.TestCase):
             u'texteloi_id': u'0996',
         }
 
-        amendements = parse_amendements_json_response(json_response)
+        parsed_result = parse_amendements_json_response(json_response)
 
-        self.assertDictEqual(expected_result, amendements[0].to_dict())
+        self.assertEquals(parsed_result.page, 1)
+        self.assertEquals(parsed_result.size, 2500)
+        self.assertEquals(parsed_result.total_count, 6123)
+        self.assertDictEqual(expected_result, parsed_result.amendements[0].to_dict())
 
     def test_html_parsing(self):
         parsing_result = parse_amendement_html(

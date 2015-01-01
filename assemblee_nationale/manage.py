@@ -31,9 +31,7 @@ def show_amendements_order(id_dossier, id_examen):
 @click.option('--end-date')
 @click.option('--numero')
 def show_amendements(start_date, end_date, numero):
-    results = AmendementService().get_amendements(start_date, end_date=end_date, numero=numero)
-    print 'Nombre d\'amendements   : %s' % (len(results),)
-    print 'Liste des amendements: '
+    results = AmendementService().get_amendements_summary(start_date, end_date=end_date, numero=numero)
     print json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
 
 
