@@ -48,4 +48,4 @@ class AmendementService(object):
 
     @staticmethod
     def get_amendement(url):
-        return parse_amendement_html(requests.get(url).content)
+        return parse_amendement_html(url, requests.get(url).content)

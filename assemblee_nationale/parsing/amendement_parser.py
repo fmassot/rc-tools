@@ -32,7 +32,7 @@ def parse_amendements_json_response(json_response):
     })
 
 
-def parse_amendement_html(html_response):
+def parse_amendement_html(url, html_response):
     soup = BeautifulSoup(html_response)
     amendement = Dict()
 
@@ -68,6 +68,7 @@ def parse_amendement_html(html_response):
 
     amendement.dispositif = soup.find('dispositif').div.decode_contents().strip()
     amendement.expose = soup.find('expose').div.decode_contents().strip()
+    amendement.url = url
 
     return amendement
 

@@ -51,6 +51,7 @@ class AmendementParsingTest(unittest.TestCase):
 
     def test_html_parsing(self):
         parsing_result = parse_amendement_html(
+            "http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp",
             requests.get("http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp").content
         )
 
@@ -80,7 +81,8 @@ class AmendementParsingTest(unittest.TestCase):
             u'sort': u'Adopté',
             u'titreDossierLegislatif': u'DÉCHÉANCE DE NATIONALITÉ POUR LES ATTEINTES AUX FORCES ARMÉES ET DE POLICE(n°996)',
             u'urlDivision': u'/14/textes/0996.asp#D_Article_unique',
-            u'urlDossier': u'http://www.assemblee-nationale.fr/14/dossiers/decheance_nationalite_contre_armees_police.asp'
+            u'urlDossier': u'http://www.assemblee-nationale.fr/14/dossiers/decheance_nationalite_contre_armees_police.asp',
+            u'url': u'http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp',
         }
 
         self.assertDictEqual(expected_result, parsing_result.to_dict())
