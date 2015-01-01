@@ -16,6 +16,7 @@ from assemblee_nationale.parsing.question_parser import parse_question, field_or
 def cli():
     pass
 
+
 @cli.command()
 @click.argument('id_dossier')
 @click.argument('id_examen')
@@ -23,6 +24,23 @@ def show_amendements_order(id_dossier, id_examen):
     results = AmendementService().get_amendement_order(id_dossier, id_examen)
     print 'Nombre d\'amendements   : %s' % (len(results),)
     print 'Ordre des ammendements : %s' % (','.join(results),)
+
+
+@cli.command()
+@click.argument('start_date')
+@click.option('--end_date')
+@click.option('--numero')
+def show_amendements(start_date, end_date, numero):
+    results = AmendementService().get_amendements(start_date, end_date=end_date, numero=numero)
+    print 'Nombre d\'amendements   : %s' % (len(results),)
+    print 'Liste des amendements: %s' % (','.join(results),)
+
+
+@cli.command()
+@click.argument('url')
+def show_amendement(url):
+    print 'Amendement :'
+    print json.dumps(AmendementService().get_amendement(url), indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
