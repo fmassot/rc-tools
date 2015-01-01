@@ -12,7 +12,7 @@ class AmendementService(object):
             'typeDocument': 'amendement',
             'rows': 100,
             'format': 'html',
-            'tri': 'ordreTexteasc',
+            'tri': 'ordreTextedesc',
             'typeRes': 'liste',
             'idArticle': None,
             'idAuteur': None,
@@ -30,18 +30,24 @@ class AmendementService(object):
     def _get_amendements_summary(self, **kwargs):
         params = self.default_params.copy()
         params.update(kwargs)
-        return parse_amendements_json_response(requests.get(self.base_url, params=params).json())
+        response = requests.get(self.base_url, params=params)
+        return parse_amendements_json_response(response.json())
 
-    def get_amendements_summary(self, start_date, end_date=None, numero=None, size=100, page=None):
+    def get_amendements_summary(self, start_date, end_date=None, numero=None, size=100, start=None):
         # FIXME : do we really want to rewrite parameters' names ?
-        return self._get_amendements_summary(dateDebut=start_date, dateFin=end_date, numAmend=numero, rows=size, start=page)
+        return self._get_amendements_summary(dateDebut=start_date, dateFin=end_date, numAmend=numero, rows=size, start=start)
+
+    def get_total_count(self, start_date, end_date=None, numero=None):
+        # First get total number of pages
+        response = self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=1)
+        return response.total_count
 
     def iter_on_amendements_summary(self, start_date, end_date=None, numero=None, size=100):
         # First get total number of pages
-        response = self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=1, page=1)
+        response = self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=1)
 
-        for page in range(0, int(response.total_count / size) + 1):
-            yield self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=size, page=page+1)
+        for start in range(0, response.total_count, size):
+            yield self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=size, start=start)
 
     def get_amendement_order(self, id_dossier, id_examen):
         return [amendement.numAmend for amendement in self._get_amendements_summary(idExamen=id_examen, idDossier=id_dossier).amendements]

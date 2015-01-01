@@ -26,7 +26,7 @@ def parse_amendements_json_response(json_response):
 
     return Dict({
         'total_count': json_response['infoGenerales']['nb_resultats'],
-        'page': json_response['infoGenerales']['debut'],
+        'start': json_response['infoGenerales']['debut'],
         'size': json_response['infoGenerales']['nb_docs'],
         'amendements': amendements
     })

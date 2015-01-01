@@ -44,7 +44,7 @@ class AmendementParsingTest(unittest.TestCase):
 
         parsed_result = parse_amendements_json_response(json_response)
 
-        self.assertEquals(parsed_result.page, 1)
+        self.assertEquals(parsed_result.start, 1)
         self.assertEquals(parsed_result.size, 2500)
         self.assertEquals(parsed_result.total_count, 6123)
         self.assertDictEqual(expected_result, parsed_result.amendements[0].to_dict())

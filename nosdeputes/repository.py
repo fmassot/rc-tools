@@ -17,6 +17,14 @@ class AmendementRepository(Repository):
         self.cursor.execute("SELECT * FROM amendement WHERE numero = %s", (numero,))
         return self.cursor.fetchone()
 
+    def get_by_url(self, url):
+        self.cursor.execute("SELECT * FROM amendement WHERE source = %s", (url,))
+        return self.cursor.fetchone()
+
+    def find_by_url(self, urls):
+        self.cursor.execute("SELECT * FROM amendement WHERE source IN %s", (urls,))
+        return self.cursor.fetchall()
+
     def get(self, numero, legislature, loi, rectif):
         self.cursor.execute(
             """SELECT * FROM amendement
