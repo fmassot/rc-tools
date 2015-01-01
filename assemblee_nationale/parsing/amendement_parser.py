@@ -59,10 +59,10 @@ def parse_amendement_html(html_response):
     }
 
     for meta_name, field_key in mapper.items():
-        amendement[field_key] = soup.find('meta', attrs={'name': meta_name})['content']
+        amendement[field_key] = soup.find('meta', attrs={'name': meta_name})['content'].strip()
 
-    amendement.dispositif = soup.find('dispositif').text
-    amendement.expose = soup.find('expose').text
+    amendement.dispositif = soup.find('dispositif').div.decode_contents().strip()
+    amendement.expose = soup.find('expose').div.decode_contents().strip()
 
     return amendement
 

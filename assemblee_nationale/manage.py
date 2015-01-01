@@ -28,18 +28,19 @@ def show_amendements_order(id_dossier, id_examen):
 
 @cli.command()
 @click.argument('start_date')
-@click.option('--end_date')
+@click.option('--end-date')
 @click.option('--numero')
 def show_amendements(start_date, end_date, numero):
     results = AmendementService().get_amendements(start_date, end_date=end_date, numero=numero)
     print 'Nombre d\'amendements   : %s' % (len(results),)
-    print 'Liste des amendements: %s' % (','.join(results),)
+    print 'Liste des amendements: '
+    print json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
 @click.argument('url')
 def show_amendement(url):
-    print 'Amendement :'
+    print 'Amendement : %s' % url
     print json.dumps(AmendementService().get_amendement(url), indent=4, sort_keys=True, ensure_ascii=False)
 
 

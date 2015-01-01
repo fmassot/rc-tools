@@ -10,7 +10,7 @@ class AmendementService(object):
         self.base_url = "http://www2.assemblee-nationale.fr/recherche/query_amendements"
         self.default_params = {
             'typeDocument': 'amendement',
-            'rows': 2500,
+            'rows': 100,
             'format': 'html',
             'tri': 'ordreTexteasc',
             'typeRes': 'liste',
