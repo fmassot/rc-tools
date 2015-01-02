@@ -4,7 +4,7 @@
 
 ## Install :
 ```bash
-pip instal -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Launch tests :
