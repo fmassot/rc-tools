@@ -2,74 +2,55 @@
 
 import re
 
-from addict import Dict
+from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResponse
 from bs4 import BeautifulSoup
 
 
-def parse_amendements_json_response(json_response):
-    # schema should be :
-    # id|numInit|titreDossierLegislatif|urlDossierLegislatif|instance|numAmend|urlAmend|designationArticle|designationAlinea|
-    # dateDepot|signataires|sort
-    # NB : the json response does not contain the text and
+def parse_amendements_summary(url, json_response):
+    """
+    json schema :
+    {
+      infoGenerales: {
+        nb_resultats, debut, nb_docs
+      },
+      data_table: 'id|numInit|titreDossierLegislatif|urlDossierLegislatif|instance|numAmend|urlAmend|designationArticle|designationAlinea|dateDepot|signataires|sort'
+    }
 
-    keys = json_response['infoGenerales']['description_schema'].split('|')
+    NB : the json response does not contain the dispositif and expose
+    """
 
     amendements = []
 
     for row in json_response['data_table']:
         values = row.split('|')
-        amendement = Dict((key, value) for key, value in zip(keys, values))
-        amendement.legislature, amendement.texteloi_id = \
-            re.search('www.assemblee-nationale.fr/(\d+)/amendements/(\d+)', amendement.urlAmend).groups()
+        kwargs = dict((field, value) for field, value in zip(AmendementSummary._fields, values))
+        kwargs['legislature'] = re.search('www.assemblee-nationale.fr/(\d+)/', kwargs['url']).groups()[0]
+        amendements.append(AmendementSummary(**kwargs))
 
-        amendements.append(amendement)
-
-    return Dict({
+    return AmendementSummaryResponse(**{
+        'url': url,
         'total_count': json_response['infoGenerales']['nb_resultats'],
         'start': json_response['infoGenerales']['debut'],
         'size': json_response['infoGenerales']['nb_docs'],
-        'amendements': amendements
+        'results': amendements
     })
 
 
-def parse_amendement_html(url, html_response):
+def parse_amendement(url, html_response):
     soup = BeautifulSoup(html_response)
-    amendement = Dict()
 
-    mapper = {
-        'NUM_AMTXT': 'numAmend',
-        'AMEND_PARENT': 'amendParent',
-        'URL_DOSSIER': 'urlDossier',
-        'NUM_INIT': 'numInit',
-        'ETAPE': 'etape',
-        'DELIBERATION': 'deliberation',
-        'TITRE_INIT': 'titreDossierLegislatif',
-        'NUM_PARTIE': 'numPartie',
-        'DESIGNATION_ARTICLE': 'designationArticle',
-        'URL_DIVISION': 'urlDivision',
-        'DESIGNATION_ALINEA': 'designationAlinea',
-        'MISSION': 'mission',
-        'AUTEURS': 'auteurs',
-        'AUTEUR_ID': 'auteurId',
-        'GROUPE_ID': 'groupeId',
-        'COSIGNATAIRES_ID': 'cosignataireIds',
-        'SEANCE': 'seance',
-        'SORT': 'sort',
-        'DATE_BADAGE': 'date_badage',
-        'DATE_SORT' : 'date_sort',
-        'ORDRE_TEXTE': 'ordre_texte',
-        'CODE': 'code',
-        'REFCODE': 'refcode',
-        'LEGISLATURE': 'legislature',
-    }
+    meta_names = [
+        'NUM_AMTXT', 'AMEND_PARENT', 'URL_DOSSIER', 'NUM_INIT', 'ETAPE', 'DELIBERATION', 'TITRE_INIT', 'NUM_PARTIE',
+        'DESIGNATION_ARTICLE', 'URL_DIVISION', 'DESIGNATION_ALINEA', 'MISSION', 'AUTEURS', 'AUTEUR_ID', 'GROUPE_ID',
+        'COSIGNATAIRES_ID', 'SEANCE', 'SORT', 'DATE_BADAGE', 'DATE_SORT', 'ORDRE_TEXTE', 'CODE', 'REFCODE',
+        'LEGISLATURE',
+    ]
 
-    for meta_name, field_key in mapper.items():
-        amendement[field_key] = soup.find('meta', attrs={'name': meta_name})['content'].strip()
+    kwargs = dict((meta_name.lower(), soup.find('meta', attrs={'name': meta_name})['content'].strip()) for meta_name in meta_names)
+    kwargs['dispositif'] = soup.find('dispositif').div.decode_contents().strip()
+    kwargs['expose'] = soup.find('expose').div.decode_contents().strip()
+    kwargs['url'] = url
 
-    amendement.dispositif = soup.find('dispositif').div.decode_contents().strip()
-    amendement.expose = soup.find('expose').div.decode_contents().strip()
-    amendement.url = url
-
-    return amendement
+    return Amendement(**kwargs)
 
 

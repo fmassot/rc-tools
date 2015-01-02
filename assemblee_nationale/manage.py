@@ -4,6 +4,7 @@ import click
 import requests
 import sys
 import json
+import pprint
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parents[1]))
@@ -31,15 +32,16 @@ def show_amendements_order(id_dossier, id_examen):
 @click.option('--end-date')
 @click.option('--numero')
 def show_amendements(start_date, end_date, numero):
-    results = AmendementService().get_amendements_summary(start_date, end_date=end_date, numero=numero)
-    print json.dumps(results, indent=4, sort_keys=True, ensure_ascii=False)
+    response = AmendementService().get_amendements_summary(start_date, end_date=end_date, numero=numero)
+    for result in response.results:
+        print json.dumps(dict(result._asdict()), indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
 @click.argument('url')
 def show_amendement(url):
     print 'Amendement : %s' % url
-    print json.dumps(AmendementService().get_amendement(url), indent=4, sort_keys=True, ensure_ascii=False)
+    print json.dumps(dict(AmendementService().get_amendement(url)._asdict()), indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
