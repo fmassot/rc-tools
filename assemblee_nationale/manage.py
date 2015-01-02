@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
 from assemblee_nationale.service import AmendementService
-from assemblee_nationale.parsing.question_parser import parse_question, field_order
+from assemblee_nationale.parsing.question_parser import parse_question
 
 
 @click.group()
@@ -47,10 +47,10 @@ def show_amendement(url):
 
 @cli.command()
 @click.argument('url')
-def parse_question_from_url(url):
+def show_question(url):
     question_html = requests.get(url).content
     parsed_data = parse_question(url, question_html)
-    print "{%s}" % ", ".join('"%s": "%s"' % (k, parsed_data[k]) for k in field_order)
+    print json.dumps(parsed_data, indent=4, sort_keys=True, ensure_ascii=False)
 
 
 if __name__ == '__main__':
