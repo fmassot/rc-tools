@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import click
-import requests
 import sys
 import json
-import pprint
+
+import click
+import requests
 from pathlib import Path
+
 
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
