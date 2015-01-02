@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
 from assemblee_nationale.service import AmendementService
-from nosdeputes.repository import AmendementRepository
+from nosdeputes.model import Amendement
 
 
 @click.group()
@@ -20,13 +20,13 @@ def cli():
 @click.argument('texteloi_id')
 @click.argument('output_filename')
 def make_liasse(texteloi_id, output_filename):
-    amendements = AmendementRepository().get_by_texteloi_id(texteloi_id)
+    query = Amendement.select().where(Amendement.texteloi_id == texteloi_id)
 
     with codecs.open(output_filename, 'w', encoding="utf-8") as file:
         file.write(u'Projet de Loi n° %s\n' % texteloi_id)
-        file.write(u'%s amendements\n' % len(amendements))
+        file.write(u'%s amendements\n' % query.count())
 
-        for amendement in amendements:
+        for amendement in query:
             file.write(u'   %s -- %s -- de %s\n' % (amendement.numero, amendement.sujet, amendement.signataires))
             file.write(u'     %s\n' % (amendement.texte,))
             file.write(u'     EXPOSE : %s\n' % (amendement.expose,))
@@ -38,7 +38,6 @@ def make_liasse(texteloi_id, output_filename):
 @click.option('--size', type=int, default=1000)
 @click.option('--output-file', default="missing_urls.txt")
 def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
-    amdt_repository = AmendementRepository()
     service = AmendementService()
 
     print u'Nombre total d\'amendement à checker : %s' % service.get_total_count(start_date, end_date=end_date)
@@ -49,8 +48,8 @@ def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
 
     for amendements_summary in amendements_summary_iterator:
         print "Page %s / %s" % (amendements_summary.start / size, amendements_summary.total_count / size)
-        urls = [a.urlAmend for a in amendements_summary.amendements]
-        urls_in_db = [a.source for a in amdt_repository.find_by_url(urls)]
+        urls = [a.url for a in amendements_summary.results]
+        urls_in_db = [a.source for a in Amendement.select().where(Amendement.source << urls)]
         missing_urls = set(urls) - set(urls_in_db)
 
         for missing_url in missing_urls:

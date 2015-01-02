@@ -10,6 +10,7 @@ HTML_PARSER = HTMLParser.HTMLParser()
 
 def parse_authors(authors):
     """Return a list of dict with name, group and sexe"""
+
     authors = HTML_PARSER.unescape(authors)
     authors_list = re.split(',|et', authors)
 
