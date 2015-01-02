@@ -3,7 +3,7 @@
 import re
 
 from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResponse
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 
 
 def parse_amendements_summary(url, json_response):
@@ -47,10 +47,16 @@ def parse_amendement(url, html_response):
     ]
 
     kwargs = dict((meta_name.lower(), soup.find('meta', attrs={'name': meta_name})['content'].strip()) for meta_name in meta_names)
-    kwargs['dispositif'] = soup.find('dispositif').div.decode_contents().strip()
-    kwargs['expose'] = soup.find('expose').div.decode_contents().strip()
+    kwargs['dispositif'] = remove_inline_css(soup.find('dispositif').div).decode_contents().strip()
+    kwargs['expose'] = remove_inline_css(soup.find('expose').div).decode_contents().strip()
     kwargs['url'] = url
 
     return Amendement(**kwargs)
 
+
+def remove_inline_css(tag):
+    for element in tag:
+        if type(element) != NavigableString:
+            del element["style"]
+    return tag
 
