@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from settings import db_config
 
 mysql_db = {
