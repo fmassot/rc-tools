@@ -47,8 +47,8 @@ def parse_amendement(url, html_response):
     ]
 
     kwargs = dict((meta_name.lower(), soup.find('meta', attrs={'name': meta_name})['content'].strip()) for meta_name in meta_names)
-    kwargs['dispositif'] = remove_inline_css(soup.find('dispositif').div).decode_contents().strip()
-    kwargs['expose'] = remove_inline_css(soup.find('expose').div).decode_contents().strip()
+    kwargs['dispositif'] = remove_inline_css(soup.find('dispositif').div).decode_contents().strip().replace('\n', '')
+    kwargs['expose'] = remove_inline_css(soup.find('expose').div).decode_contents().strip().replace('\n', '')
     kwargs['url'] = url
 
     return Amendement(**kwargs)
