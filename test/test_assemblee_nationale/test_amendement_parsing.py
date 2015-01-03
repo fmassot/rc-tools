@@ -3,12 +3,18 @@
 import requests
 import unittest
 
-from assemblee_nationale.parsing.amendement_parser import parse_amendements_summary, parse_amendement
+from bs4 import BeautifulSoup
+
+from assemblee_nationale.parsing.amendement_parser import parse_amendements_summary, parse_amendement, remove_inline_css_and_invalid_tags
 
 
 class AmendementParsingTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+
+    def test_remove_inline_css_and_invalid_tags(self):
+        soup = BeautifulSoup('<p style="text-align: justify;">Test <b>bold</b>, and <i>italic<b> with bold </b><u>and with u</u></i></p><p> 2nd test <i>italic</i></p>')
+        self.assertEquals(remove_inline_css_and_invalid_tags(soup).decode_contents(), '<p>Test bold, and italic with bold and with u</p><p> 2nd test italic</p>')
 
     def test_json_parsing(self):
         json_response = {
@@ -58,7 +64,7 @@ class AmendementParsingTest(unittest.TestCase):
         expected_result = {
             u'amend_parent': u'',
             u'auteur_id': u'610860',
-            u'auteurs': u'M. Coronado et M. Molac',
+            u'auteurs': u'M. Coronado et M. Molac',
             u'code': u'',
             u'cosignataires_id': u'607619',
             u'date_badage': u'24/11/2014',
@@ -68,7 +74,7 @@ class AmendementParsingTest(unittest.TestCase):
             u'designation_article': u'ART. UNIQUE',
             u'dispositif': u'<p>Supprimer cet article.</p>',
             u'etape': u'1ère lecture (1ère assemblée saisie)',
-            u'expose': u'<p>La pr\xe9sente proposition de loi souhaite permettre la d\xe9ch\xe9ance de nationalit\xe9 \xe0 toute personne portant les armes contre les forces arm\xe9es fran\xe7aises et de police, ou leurs alli\xe9s.</p><p>Actuellement la loi pr\xe9voit d\xe9j\xe0 la possible de d\xe9choir de leur nationalit\xe9 fran\xe7aise les personnes condamn\xe9e<span>s</span> pour un crime ou d\xe9lit constituant une atteinte aux int\xe9r\xeats fondamentaux de la nation et les personnes condamn\xe9es, en France ou \xe0 l\'\xe9tranger, pour crime \xe0 au moins cinq ann\xe9es d\'emprisonnement.</p><p>Au-del\xe0 de son affichage, la pr\xe9sente proposition de loi ne couvrirait pas de cas nouveaux. Elle vise surtout \xe0 supprimer des garanties essentielles.</p><p>Comme le propose le rapporteur, l\u2019avis du Conseil d\u2019Etat resterait syst\xe9matique, mais il ne serait plus obligatoirement suivi. C\u2019est pourtant une garantie fondamentale. La garantie temporelle pr\xe9vu \xe0 l\u2019article 25-1 du code civil serait \xe9galement abrog\xe9e.</p><p>Il est \xe0 noter que la proposition de loi vise les personnes ayant acquis la nationalit\xe9 fran\xe7aise. Il est pourtant dangereux de consid\xe9rer qu\u2019il y aurait plusieurs cat\xe9gories de citoyens.</p><p>Les r\xe9centes affaires montrent \xe9galement que le probl\xe8me de \xab\xa0djihaddistes fran\xe7ais\xa0\xbb n\u2019est pas un probl\xe8me de binationaux, ou de personnes qui auraient acquis la nationalit\xe9 fran\xe7aise.</p><p>Pour toutes ces raisons, il est propos\xe9 de supprimer l\u2019article unique de cette loi.</p>',
+            u'expose': u'<p>La pr\xe9sente proposition de loi souhaite permettre la d\xe9ch\xe9ance de nationalit\xe9 \xe0 toute personne portant les armes contre les forces arm\xe9es fran\xe7aises et de police, ou leurs alli\xe9s.</p><p>Actuellement la loi pr\xe9voit d\xe9j\xe0 la possible de d\xe9choir de leur nationalit\xe9 fran\xe7aise les personnes condamn\xe9e<span>s</span> pour un crime ou d\xe9lit constituant une atteinte aux int\xe9r\xeats fondamentaux de la nation et les personnes condamn\xe9es, en France ou \xe0 l\'\xe9tranger, pour crime \xe0 au moins cinq ann\xe9es d\'emprisonnement.</p><p>Au-del\xe0 de son affichage, la pr\xe9sente proposition de loi ne couvrirait pas de cas nouveaux. Elle vise surtout \xe0 supprimer des garanties essentielles.</p><p>Comme le propose le rapporteur, l\'avis du Conseil d\'Etat resterait syst\xe9matique, mais il ne serait plus obligatoirement suivi. C\'est pourtant une garantie fondamentale. La garantie temporelle pr\xe9vu \xe0 l\'article 25-1 du code civil serait \xe9galement abrog\xe9e.</p><p>Il est \xe0 noter que la proposition de loi vise les personnes ayant acquis la nationalit\xe9 fran\xe7aise. Il est pourtant dangereux de consid\xe9rer qu\'il y aurait plusieurs cat\xe9gories de citoyens.</p><p>Les r\xe9centes affaires montrent \xe9galement que le probl\xe8me de \xab\xa0djihaddistes fran\xe7ais\xa0\xbb n\'est pas un probl\xe8me de binationaux, ou de personnes qui auraient acquis la nationalit\xe9 fran\xe7aise.</p><p>Pour toutes ces raisons, il est propos\xe9 de supprimer l\'article unique de cette loi.</p>',
             u'groupe_id': u'656014',
             u'legislature': u'14',
             u'mission': u'',

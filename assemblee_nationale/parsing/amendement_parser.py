@@ -46,17 +46,27 @@ def parse_amendement(url, html_response):
         'LEGISLATURE',
     ]
 
-    kwargs = dict((meta_name.lower(), soup.find('meta', attrs={'name': meta_name})['content'].strip()) for meta_name in meta_names)
-    kwargs['dispositif'] = remove_inline_css(soup.find('dispositif').div).decode_contents().strip().replace('\n', '')
-    kwargs['expose'] = remove_inline_css(soup.find('expose').div).decode_contents().strip().replace('\n', '')
+    kwargs = dict((meta_name.lower(), clean_text(soup.find('meta', attrs={'name': meta_name})['content'])) for meta_name in meta_names)
+    kwargs['auteurs'] = kwargs['auteurs'].replace(u'\xa0', ' ')
+    kwargs['dispositif'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('dispositif').div).decode_contents())
+    kwargs['expose'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('expose').div).decode_contents())
     kwargs['url'] = url
 
     return Amendement(**kwargs)
 
 
-def remove_inline_css(tag):
-    for element in tag:
-        if type(element) != NavigableString:
-            del element["style"]
-    return tag
+def clean_text(text):
+    return text.strip().replace('\n', '').replace(u'\u2019', '\'')
+
+
+def remove_inline_css_and_invalid_tags(soup):
+    for invalid_tag in ['b', 'i', 'u']:
+        for match in soup.findAll(invalid_tag):
+            match.unwrap()
+
+    for tag in soup:
+        if type(tag) != NavigableString:
+            del tag["style"]
+
+    return soup
 
