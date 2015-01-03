@@ -8,8 +8,11 @@ from nosdeputes.mapping.an_mapping import an_to_nd_amendement_mapper
 
 
 class ANMappingTest(unittest.TestCase):
-    def test_amendement_1(self):
+    def setUp(self):
         self.maxDiff = None
+
+    def test_amendement_1(self):
+
         an_amendement = AmendementService().get_amendement("http://www.assemblee-nationale.fr/14/amendements/2455/AN/76.asp")
         amendement = an_to_nd_amendement_mapper(an_amendement)
 
