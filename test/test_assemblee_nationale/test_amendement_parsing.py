@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import requests
 import unittest
 
+import requests
 from bs4 import BeautifulSoup
 
 from assemblee_nationale.parsing.amendement_parser import parse_amendements_summary, parse_amendement, remove_inline_css_and_invalid_tags

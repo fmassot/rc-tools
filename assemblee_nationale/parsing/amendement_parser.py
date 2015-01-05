@@ -2,8 +2,9 @@
 
 import re
 
-from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResponse
 from bs4 import BeautifulSoup, NavigableString
+
+from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResponse
 
 
 def parse_amendements_summary(url, json_response):

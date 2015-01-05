@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from addict import Dict
 import datetime
 import re
+
+from addict import Dict
 
 from nosdeputes.constant import SortAmendement
 

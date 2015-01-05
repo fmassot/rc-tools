@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import re
-import click
 import os
 import sys
+
+import click
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 from json import loads
 from commons.utf8_csv import UnicodeWriter

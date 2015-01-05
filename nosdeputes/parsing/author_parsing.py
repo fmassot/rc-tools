@@ -5,6 +5,7 @@ import HTMLParser
 
 from addict import Dict
 
+
 HTML_PARSER = HTMLParser.HTMLParser()
 
 

@@ -2,6 +2,7 @@
 from __future__ import division
 
 import requests
+
 from parsing.amendement_parser import parse_amendements_summary, parse_amendement
 
 

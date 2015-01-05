@@ -2,7 +2,9 @@
 
 import codecs
 import sys
+
 from pathlib import Path
+
 
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
@@ -11,7 +13,7 @@ import click
 from peewee import SQL
 from assemblee_nationale.service import AmendementService
 from nosdeputes.model import Amendement
-from nosdeputes.parsing.amendement_parsing import amendement_hash, parse_amendement_url
+from nosdeputes.parsing.amendement_parsing import amendement_hash
 
 
 @click.group()
