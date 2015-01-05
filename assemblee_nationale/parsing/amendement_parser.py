@@ -40,7 +40,7 @@ def parse_amendement(url, html_response):
     soup = BeautifulSoup(html_response)
 
     meta_names = [
-        'NUM_AMTXT', 'AMEND_PARENT', 'URL_DOSSIER', 'NUM_INIT', 'ETAPE', 'DELIBERATION', 'TITRE_INIT', 'NUM_PARTIE',
+        'NUM_AMTXT', 'NUM_AMEND', 'AMEND_PARENT', 'URL_DOSSIER', 'NUM_INIT', 'ETAPE', 'DELIBERATION', 'TITRE_INIT', 'NUM_PARTIE',
         'DESIGNATION_ARTICLE', 'URL_DIVISION', 'DESIGNATION_ALINEA', 'MISSION', 'AUTEURS', 'AUTEUR_ID', 'GROUPE_ID',
         'COSIGNATAIRES_ID', 'SEANCE', 'SORT', 'DATE_BADAGE', 'DATE_SORT', 'ORDRE_TEXTE', 'CODE', 'REFCODE',
         'LEGISLATURE',
@@ -48,8 +48,8 @@ def parse_amendement(url, html_response):
 
     kwargs = dict((meta_name.lower(), clean_text(soup.find('meta', attrs={'name': meta_name})['content'])) for meta_name in meta_names)
     kwargs['auteurs'] = kwargs['auteurs'].replace(u'\xa0', ' ')
-    kwargs['dispositif'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('dispositif').div).decode_contents())
-    kwargs['expose'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('expose').div).decode_contents())
+    kwargs['dispositif'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('dispositif')))
+    kwargs['expose'] = clean_text(remove_inline_css_and_invalid_tags(soup.find('expose')))
     kwargs['url'] = url
 
     return Amendement(**kwargs)
@@ -60,6 +60,12 @@ def clean_text(text):
 
 
 def remove_inline_css_and_invalid_tags(soup):
+    if soup is None:
+        return u''
+
+    if soup.div:
+        soup = soup.div
+
     for invalid_tag in ['b', 'i', 'u']:
         for match in soup.findAll(invalid_tag):
             match.unwrap()
@@ -67,6 +73,7 @@ def remove_inline_css_and_invalid_tags(soup):
     for tag in soup:
         if type(tag) != NavigableString:
             del tag["style"]
+            del tag["class"]
 
-    return soup
+    return soup.decode_contents()
 
