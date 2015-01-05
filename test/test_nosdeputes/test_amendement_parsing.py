@@ -4,11 +4,20 @@ import datetime
 import unittest
 
 from nosdeputes.parsing.amendement_parsing import (
-    parse_rectif, parse_amendement_sort, SortAmendement, parse_date, parse_num
+    parse_rectif, parse_amendement_sort, SortAmendement, parse_date, parse_num, amendement_hash
 )
 
 
 class AmendementParsingTest(unittest.TestCase):
+    def test_hash_1(self):
+        self.assertEquals('140235242A', amendement_hash('http://www.assemblee-nationale.fr/14/amendements/0235A/AN/242.asp'))
+
+    def test_hash_1(self):
+        self.assertEquals('141395CF523A', amendement_hash('http://www.assemblee-nationale.fr/14/amendements/1395A/CION_FIN/CF523.asp'))
+
+    def test_hash_with_ta(self):
+        self.assertEquals('14TA806', amendement_hash('http://www.assemblee-nationale.fr/14/amendements/TA80/AN/6.asp'))
+
     def test_rectif_is_1(self):
         self.assertEquals(1, parse_rectif(u'76 (Rect)'))
 

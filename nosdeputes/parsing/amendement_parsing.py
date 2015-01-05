@@ -6,6 +6,20 @@ import re
 from nosdeputes.constant import SortAmendement
 
 
+def amendement_hash(url):
+    try:
+        legislature, TA, texteloi_id, part_loi, something, num_am = re.search('/(\d+)/amendements/(TA)?(\d+)([A-z]+)?/([\w-]+)/(\w+)\.asp', url).groups()
+        part_loi = '' if part_loi is None else part_loi
+        texteloi_id = str(int(texteloi_id))
+        texteloi_id = 'TA' + texteloi_id if TA else texteloi_id
+        hash = unicode(legislature + texteloi_id + num_am + part_loi)
+    except:
+        print url
+        print legislature, texteloi_id, part_loi, something, num_am
+        raise
+    return hash
+
+
 def parse_amendement_sort(sort):
     sort = sort.lower()
 

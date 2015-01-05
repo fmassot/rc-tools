@@ -7,11 +7,11 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
 import click
-import re
 
 from peewee import SQL
 from assemblee_nationale.service import AmendementService
 from nosdeputes.model import Amendement
+from nosdeputes.parsing.amendement_parsing import amendement_hash
 
 
 @click.group()
@@ -48,16 +48,13 @@ def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
 
     all_missing_urls = []
 
-    def amendement_hash(am):
-        return am.legislature + am.num_init + re.search('(\w*)(\s\(\w*\))?', am.num_amtxt).group(1)
-
     for amendements_summary in amendements_summary_iterator:
         print "Page %s / %s" % (amendements_summary.start / size, amendements_summary.total_count / size)
-        amendement_hashes = map(amendement_hash, amendements_summary.results)
+        amendement_hashes = [amendement_hash(a.url) for a in amendements_summary.results]
         sql_amendement_hash = SQL('CONCAT(legislature, texteloi_id, numero)')
         db_amendement_hashes = [unicode(a.hash) for a in Amendement.select(sql_amendement_hash.alias('hash')).where(sql_amendement_hash << amendement_hashes)]
         missing_amendement_hashes = set(amendement_hashes) - set(db_amendement_hashes)
-        missing_urls = [a.url for a in amendements_summary.results if amendement_hash(a) in missing_amendement_hashes]
+        missing_urls = [a.url for a in amendements_summary.results if amendement_hash(a.url) in missing_amendement_hashes]
         for missing_url in missing_urls:
             print u'Amendement manquant : %s' % missing_url
 
