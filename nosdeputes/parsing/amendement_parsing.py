@@ -7,8 +7,9 @@ import re
 from nosdeputes.constant import SortAmendement
 
 
-def amendement_hash(legislature, texteloi_id, numero):
-    return legislature + texteloi_id + numero
+def amendement_hash(url):
+    parsed_data = parse_amendement_url(url)
+    return parsed_data.legislature + parsed_data.texteloi_id + parsed_data.numero
 
 
 def parse_amendement_url(url):
