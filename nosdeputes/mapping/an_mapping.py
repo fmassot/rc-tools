@@ -3,12 +3,13 @@
 import hashlib
 
 from nosdeputes.model import Amendement
-from nosdeputes.parsing.amendement_parsing import parse_amendement_sort, parse_date, parse_num, parse_rectif
-from nosdeputes.parsing.author_parsing import parse_authors
+from nosdeputes.parsing.amendement_parsing import parse_amendement_sort, parse_date, parse_num, parse_rectif, parse_amendement_url
 
 
 def an_to_nd_amendement_mapper(an_amendement):
     amendement = Amendement()
+
+    parsed_url_data = parse_amendement_url(an_amendement.url)
 
     amendement.source = an_amendement.url
     amendement.sous_amendement_de = parse_num(an_amendement.amend_parent)
@@ -17,9 +18,9 @@ def an_to_nd_amendement_mapper(an_amendement):
     amendement.sujet = an_amendement.designation_article
     amendement.texte = an_amendement.dispositif
     amendement.expose = an_amendement.expose
-    amendement.legislature = an_amendement.legislature
-    amendement.numero = parse_num(an_amendement.num_amtxt)
-    amendement.texteloi_id = an_amendement.num_init
+    amendement.legislature = parsed_url_data.legislature
+    amendement.numero = parsed_url_data.numero
+    amendement.texteloi_id = parsed_url_data.texteloi_id
     amendement.sort = parse_amendement_sort(an_amendement.sort)
     amendement.rectif = parse_rectif(an_amendement.num_amtxt)
 

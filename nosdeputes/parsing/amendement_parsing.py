@@ -1,23 +1,32 @@
 # -*- coding: utf-8 -*-
 
+from addict import Dict
 import datetime
 import re
 
 from nosdeputes.constant import SortAmendement
 
 
-def amendement_hash(url):
-    try:
-        legislature, TA, texteloi_id, part_loi, something, num_am = re.search('/(\d+)/amendements/(TA)?(\d+)([A-z]+)?/([\w-]+)/(\w+)\.asp', url).groups()
-        part_loi = '' if part_loi is None else part_loi
-        texteloi_id = str(int(texteloi_id))
-        texteloi_id = 'TA' + texteloi_id if TA else texteloi_id
-        hash = unicode(legislature + texteloi_id + num_am + part_loi)
-    except:
-        print url
-        print legislature, texteloi_id, part_loi, something, num_am
-        raise
-    return hash
+def amendement_hash(legislature, texteloi_id, numero):
+    return legislature + texteloi_id + numero
+
+
+def parse_amendement_url(url):
+    legislature, prefix_loi_id, loi_id, loi_ABCD, commission, prefix_am_number, am_number = \
+        re.search('/(\d+)/amendements/([A-z]+)?(\d+)([A-z]+)?/([\w-]+)/([A-z]+)?(\d+)\.asp', url).groups()
+
+    prefix_am_number = '' if prefix_am_number is None else prefix_am_number
+    loi_ABCD = '' if loi_ABCD is None else loi_ABCD
+
+    # Set prefix when this is a commission and when there is not already a prefix
+    if commission != 'AN' and not prefix_am_number:
+        prefix_am_number = commission
+
+    # remove the first '0' digits
+    loi_id = str(int(loi_id))
+    loi_id = prefix_loi_id + loi_id if prefix_loi_id else loi_id
+
+    return Dict(legislature=legislature, texteloi_id=loi_id, numero=prefix_am_number + am_number + loi_ABCD)
 
 
 def parse_amendement_sort(sort):
