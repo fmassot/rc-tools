@@ -14,7 +14,7 @@ class AmendementParsingTest(unittest.TestCase):
 
     def test_remove_inline_css_and_invalid_tags(self):
         soup = BeautifulSoup('<p style="text-align: justify;">Test <b>bold</b>, and <i>italic<b> with bold </b><u>and with u</u></i></p><p> 2nd test <i>italic</i></p>')
-        self.assertEquals(remove_inline_css_and_invalid_tags(soup).decode_contents(), '<p>Test bold, and italic with bold and with u</p><p> 2nd test italic</p>')
+        self.assertEquals(remove_inline_css_and_invalid_tags(soup), '<p>Test bold, and italic with bold and with u</p><p> 2nd test italic</p>')
 
     def test_json_parsing(self):
         json_response = {
@@ -79,6 +79,7 @@ class AmendementParsingTest(unittest.TestCase):
             u'legislature': u'14',
             u'mission': u'',
             u'num_amtxt': u'CL4',
+            u'num_amend': u'4',
             u'num_init': u'996',
             u'num_partie': u'',
             u'ordre_texte': u'eaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaac',
