@@ -6,7 +6,7 @@ import requests
 from parsing.amendement_parser import parse_amendements_summary, parse_amendement
 
 
-class AmendementService(object):
+class AmendementSummaryService(object):
     def __init__(self):
         self.base_url = "http://www2.assemblee-nationale.fr/recherche/query_amendements"
         self.default_params = {
@@ -52,7 +52,3 @@ class AmendementService(object):
 
     def get_amendement_order(self, id_dossier, id_examen):
         return [amendement.num_amtxt for amendement in self._get_amendements_summary(idExamen=id_examen, idDossier=id_dossier).results]
-
-    @staticmethod
-    def get_amendement(url):
-        return parse_amendement(url, requests.get(url).content)
