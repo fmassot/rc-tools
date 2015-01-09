@@ -18,6 +18,7 @@ class NDApi(object):
         url = self.base_url + '/synthese/' + month + '/' + format
 
         if format == 'json':
-            return requests.get(url).json()
+            data = requests.get(url).json()
+            return [depute['depute'] for depute in data['deputes']]
         else:
             return requests.get(url).content

@@ -37,16 +37,16 @@ def make_liasse(texteloi_id, output_filename):
 
 
 @cli.command()
-@click.argument('start_date')
+@click.option('--start-date')
 @click.option('--end-date')
 @click.option('--size', type=int, default=1000)
 @click.option('--output-file', default="missing_urls.txt")
 def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
     service = AmendementSummaryService()
 
-    print u'Nombre total d\'amendement à checker : %s' % service.get_total_count(start_date, end_date=end_date)
+    print u'Nombre total d\'amendement à checker : %s' % service.total_count(start_date, end_date=end_date)
 
-    amendements_summary_iterator = service.iter_on_amendements_summary(start_date, end_date=end_date, size=size)
+    amendements_summary_iterator = service.iter(start_date=start_date, end_date=end_date, size=size)
 
     all_missing_urls = []
 

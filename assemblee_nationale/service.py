@@ -3,7 +3,7 @@ from __future__ import division
 
 import requests
 
-from parsing.amendement_parser import parse_amendements_summary, parse_amendement
+from parsing.amendement_parser import parse_amendements_summary
 
 
 class AmendementSummaryService(object):
@@ -28,27 +28,27 @@ class AmendementSummaryService(object):
             'start': None,
         }
 
-    def _get_amendements_summary(self, **kwargs):
+    def _get(self, **kwargs):
         params = self.default_params.copy()
         params.update(kwargs)
         response = requests.get(self.base_url, params=params)
         return parse_amendements_summary(response.request.url, response.json())
 
-    def get_amendements_summary(self, start_date, end_date=None, numero=None, size=100, start=None):
+    def get(self, start_date=None, end_date=None, numero=None, size=100, start=None):
         # FIXME : do we really want to rewrite parameters' names ?
-        return self._get_amendements_summary(dateDebut=start_date, dateFin=end_date, numAmend=numero, rows=size, start=start)
+        return self._get(dateDebut=start_date, dateFin=end_date, numAmend=numero, rows=size, start=start)
 
-    def get_total_count(self, start_date, end_date=None, numero=None):
+    def total_count(self, start_date=None, end_date=None, numero=None):
         # First get total number of pages
-        response = self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=1)
+        response = self.get(start_date=start_date, end_date=end_date, numero=numero, size=1)
         return response.total_count
 
-    def iter_on_amendements_summary(self, start_date, end_date=None, numero=None, size=100):
+    def iter(self, start_date, end_date=None, numero=None, size=100):
         # First get total number of pages
-        response = self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=1)
+        response = self.get(start_date, end_date=end_date, numero=numero, size=1)
 
         for start in range(0, response.total_count, size):
-            yield self.get_amendements_summary(start_date, end_date=end_date, numero=numero, size=size, start=start)
+            yield self.get(start_date, end_date=end_date, numero=numero, size=size, start=start)
 
-    def get_amendement_order(self, id_dossier, id_examen):
-        return [amendement.num_amtxt for amendement in self._get_amendements_summary(idExamen=id_examen, idDossier=id_dossier).results]
+    def get_order(self, id_dossier, id_examen):
+        return [amendement.num_amtxt for amendement in self._get(idDossier=id_dossier, idExamen=id_examen).results]
