@@ -5,6 +5,7 @@ import unittest
 import requests
 
 from assemblee_nationale.parsing.question_parser import parse_question
+from assemblee_nationale.parsing.question_search_result_parser import parse_question_search_result
 
 
 class QuestionParsingTest(unittest.TestCase):
@@ -23,6 +24,15 @@ class QuestionParsingTest(unittest.TestCase):
         parsing_result = parse_question(expected_result['source'], data)
 
         self.assertDictEqual(expected_result, parsing_result)
+
+    def test_parsing_search_result(self):
+        url = 'http://www2.assemblee-nationale.fr/recherche/resultats_questions'
+        response = requests.post(url, data={'legislature': 13, 'limit': 5})
+        parsing_result = parse_question_search_result(url, response.content)
+
+        self.assertEquals(138598, parsing_result['total_count'])
+        # always size at 25
+        self.assertEquals(5, len(parsing_result['results']))
 
 
 if __name__ == '__main__':
