@@ -61,24 +61,35 @@ class QuestionSearchService(object):
         self.default_params = {
             'limit': 10,
             'legislature': None,
+            'replies[]': None, # ar, sr
+            'removed[]': None # 0,1
         }
 
-    def _get(self, legislature=None, size=None):
+    def _get(self, legislature=None, is_answered=None, is_removed=None, size=None):
         params = self.default_params.copy()
-        params.update({'legislature': legislature, 'limit': size})
+
+        if is_answered:
+            is_answered = 'ar'
+        elif is_answered is not None:
+            is_answered = 'sr'
+        if is_removed is not None:
+            is_removed = int(is_removed)
+
+        params.update({'legislature': legislature, 'limit': size, 'replies[]': is_answered, 'removed[]': is_removed})
+
         return requests.post(self.base_url, data=params)
 
-    def get(self, legislature=None, size=10):
-        response = self._get(legislature=legislature, size=size)
+    def get(self, legislature=None, is_answered=None, is_removed=None, size=10):
+        response = self._get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
         return parse_question_search_result(response.url, response.content)
 
     def _get_next(self, next_url):
         next_url = "http://www2.assemblee-nationale.fr" + next_url
         return parse_question_search_result(next_url, requests.get(next_url).content)
 
-    def iter(self, legislature=None, size=10):
+    def iter(self, legislature=None, is_answered=None, is_removed=None, size=10):
         # First get total number of pages
-        search_results = self.get(legislature=legislature, size=size)
+        search_results = self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
         yield search_results
 
         for start in range(1, search_results['total_count'], size):

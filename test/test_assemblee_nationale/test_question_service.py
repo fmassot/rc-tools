@@ -10,6 +10,11 @@ class QuestionParsingTest(unittest.TestCase):
         service = QuestionSearchService()
         self.assertEquals(5, len(service.get(legislature=13, size=5)['results']))
 
+    def test_is_answer(self):
+        service = QuestionSearchService()
+        response = service.get(legislature=13, size=5, is_answered=1)
+        self.assertIsNotNone(response['results'][0]['answer_date'])
+
     def test_iter(self):
         iterator = QuestionSearchService().iter(legislature=13, size=5)
         iterator.next()

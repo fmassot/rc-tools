@@ -9,20 +9,24 @@ def parse_question_search_result(url, html_content):
     soup = BeautifulSoup(html_content)
 
     data = {
+        'url': url,
         'total_count': int(soup.find('article').div.div.p.strong.text)
     }
 
     results = []
     for tr in soup.find_all('tr')[1:]:
-        url = tr.td.a['href']
+        all_tds = tr.find_all('td')
+        url = all_tds[0].a['href']
         legislature, numero = re.search('(\d+)-(\d+)QE\.htm', url).groups()
-        question_info_td = tr.find_all('td')[1]
+        dates = all_tds[2].find_all('strong')
         results.append({
             'url': url,
             'legislature': legislature,
             'numero': numero,
-            'auteur': question_info_td.strong.text,
-            'tags': question_info_td.em.text
+            'auteur': all_tds[1].strong.text,
+            'tags': all_tds[1].em.text,
+            'publication_date': dates[0].text,
+            'answer_date': dates[1].text if len(dates) > 1 else None,
         })
 
     data['results'] = results
