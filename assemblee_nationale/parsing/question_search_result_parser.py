@@ -31,6 +31,7 @@ def parse_question_search_result(url, html_content):
         })
 
     data['results'] = results
-    data['next_url'] = soup.find('div', class_='pagination-bootstrap').find_all('li')[-1].a['href']
+    next_link = soup.find('div', class_='pagination-bootstrap').find_all('li')[-1]
+    data['next_url'] = next_link.a['href'] if next_link.a else None
 
     return data

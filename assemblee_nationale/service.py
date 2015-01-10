@@ -97,5 +97,6 @@ class QuestionSearchService(object):
         yield search_results
 
         for start in range(1, search_results['total_count'], size):
-            search_results = self._get_next(search_results['next_url'])
-            yield search_results
+            if search_results['next_url'] is not None:
+                search_results = self._get_next(search_results['next_url'])
+                yield search_results
