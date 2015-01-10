@@ -11,7 +11,7 @@ sys.path.append(str(Path(__file__).absolute().parents[1]))
 import click
 
 from peewee import SQL
-from assemblee_nationale.service import AmendementSummaryService
+from assemblee_nationale.service import AmendementSearchService
 from nosdeputes.model import Amendement
 from nosdeputes.parsing.amendement_parsing import amendement_hash
 
@@ -42,7 +42,7 @@ def make_liasse(texteloi_id, output_filename):
 @click.option('--size', type=int, default=1000)
 @click.option('--output-file', default="missing_urls.txt")
 def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
-    service = AmendementSummaryService()
+    service = AmendementSearchService()
 
     print u'Nombre total d\'amendement à checker : %s' % service.total_count(start_date, end_date=end_date)
 

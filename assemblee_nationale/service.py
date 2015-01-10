@@ -7,7 +7,7 @@ from parsing.amendement_parser import parse_amendements_summary
 from parsing.question_search_result_parser import parse_question_search_result
 
 
-class AmendementSummaryService(object):
+class AmendementSearchService(object):
     def __init__(self):
         self.base_url = "http://www2.assemblee-nationale.fr/recherche/query_amendements"
         self.default_params = {
@@ -55,7 +55,7 @@ class AmendementSummaryService(object):
         return [amendement.num_amtxt for amendement in self._get(idDossier=id_dossier, idExamen=id_examen).results]
 
 
-class SearchQuestionService(object):
+class QuestionSearchService(object):
     def __init__(self):
         self.base_url = "http://www2.assemblee-nationale.fr/recherche/resultats_questions"
         self.default_params = {
