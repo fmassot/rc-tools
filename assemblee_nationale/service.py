@@ -62,7 +62,8 @@ class QuestionSearchService(object):
             'limit': 10,
             'legislature': None,
             'replies[]': None, # ar, sr
-            'removed[]': None # 0,1
+            'removed[]': None, # 0,1
+            'ssTypeDocument[]': 'qe',
         }
 
     def _get(self, legislature=14, is_answered=None, is_removed=None, size=10):

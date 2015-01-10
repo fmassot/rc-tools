@@ -17,12 +17,13 @@ def parse_question_search_result(url, html_content):
     for tr in soup.find_all('tr')[1:]:
         all_tds = tr.find_all('td')
         url = all_tds[0].a['href']
-        legislature, numero = re.search('(\d+)-(\d+)QE\.htm', url).groups()
+        legislature, numero, question_type = re.search('(\d+)-(\d+)(QE|QOSD)\.htm', url).groups()
         dates = all_tds[2].find_all('strong')
         results.append({
             'url': url,
             'legislature': legislature,
             'numero': numero,
+            'question_type': question_type,
             'auteur': all_tds[1].strong.text,
             'tags': all_tds[1].em.text,
             'publication_date': dates[0].text,
