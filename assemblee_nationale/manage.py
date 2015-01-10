@@ -36,14 +36,14 @@ def show_amendements_order(id_dossier, id_examen):
 def show_amendements_summary(start_date, end_date, numero):
     response = AmendementSearchService().get(start_date=start_date, end_date=end_date, numero=numero)
     for result in response.results:
-        print json.dumps(dict(result._asdict()), indent=4, sort_keys=True, ensure_ascii=False)
+        print json.dumps(dict(result.__dict__), indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
 @click.argument('url')
 def show_amendement(url):
     print 'Amendement : %s' % url
-    print json.dumps(dict((parse_amendement(url, requests.get(url).content)._asdict())), indent=4, sort_keys=True, ensure_ascii=False)
+    print json.dumps(parse_amendement(url, requests.get(url).content).__dict__, indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()

@@ -4,7 +4,13 @@ import re
 
 from bs4 import BeautifulSoup, NavigableString
 
-from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResponse
+from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResult
+
+
+def convert_camelcase_to_underscore(name):
+    # thx to http://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-camel-case
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 def parse_amendements_summary(url, json_response):
@@ -21,14 +27,15 @@ def parse_amendements_summary(url, json_response):
     """
 
     amendements = []
+    fields = [convert_camelcase_to_underscore(field) for field in json_response['infoGenerales']['description_schema'].split('|')]
 
     for row in json_response['data_table']:
         values = row.split('|')
-        kwargs = dict((field, value) for field, value in zip(AmendementSummary._fields, values))
-        kwargs['legislature'] = re.search('www.assemblee-nationale.fr/(\d+)/', kwargs['url']).groups()[0]
-        amendements.append(AmendementSummary(**kwargs))
+        amd = AmendementSummary(**dict(zip(fields, values)))
+        amd.legislature = re.search('www.assemblee-nationale.fr/(\d+)/', amd.url_amend).groups()[0]
+        amendements.append(amd)
 
-    return AmendementSummaryResponse(**{
+    return AmendementSummaryResult(**{
         'url': url,
         'total_count': json_response['infoGenerales']['nb_resultats'],
         'start': json_response['infoGenerales']['debut'],

@@ -34,11 +34,11 @@ class AmendementParsingTest(unittest.TestCase):
         expected_result = {
             u'id': u'S-AMANR5L14PO59051B996N4',
             u'num_init': u'996',
-            u'titre_init': u"Justice : d\xe9ch\xe9ance de la nationalit\xe9 pour tout individu portant les armes contre l'arm\xe9e et la police",
-            u'url_dossier': u'http://www.assemblee-nationale.fr/14/dossiers/decheance_nationalite_contre_armees_police.asp',
+            u'titre_dossier_legislatif': u"Justice : d\xe9ch\xe9ance de la nationalit\xe9 pour tout individu portant les armes contre l'arm\xe9e et la police",
+            u'url_dossier_legislatif': u'http://www.assemblee-nationale.fr/14/dossiers/decheance_nationalite_contre_armees_police.asp',
             u'instance': u'Lois',
-            u'num_amtxt': u'CL4',
-            u'url': u'http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp',
+            u'num_amend': u'CL4',
+            u'url_amend': u'http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp',
             u'designation_article': u'Article UNIQUE',
             u'designation_alinea': u'',
             u'date_depot': u'21 novembre 2014',
@@ -53,7 +53,7 @@ class AmendementParsingTest(unittest.TestCase):
         self.assertEquals(parsed_result.start, 1)
         self.assertEquals(parsed_result.size, 2500)
         self.assertEquals(parsed_result.total_count, 6123)
-        self.assertDictEqual(expected_result, dict(parsed_result.results[0]._asdict()))
+        self.assertDictEqual(expected_result, parsed_result.results[0].__dict__)
 
     def test_html_parsing(self):
         parsing_result = parse_amendement(
@@ -92,7 +92,7 @@ class AmendementParsingTest(unittest.TestCase):
             u'url': u'http://www.assemblee-nationale.fr/14/amendements/0996/CION_LOIS/CL4.asp',
         }
 
-        self.assertDictEqual(expected_result, dict(parsing_result._asdict()))
+        self.assertDictEqual(expected_result, parsing_result.__dict__)
 
 if __name__ == '__main__':
     unittest.main()

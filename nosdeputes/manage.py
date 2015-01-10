@@ -52,7 +52,7 @@ def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
 
     for amendements_summary in amendements_summary_iterator:
         print "Page %s / %s" % (amendements_summary.start / size, amendements_summary.total_count / size)
-        amendement_hashes = [amendement_hash(a.url) for a in amendements_summary.results]
+        amendement_hashes = [amendement_hash(a.url_amend) for a in amendements_summary.results]
         sql_amendement_hash = SQL('CONCAT(legislature, texteloi_id, numero)')
         db_amendement_hashes = [unicode(a.hash) for a in Amendement.select(sql_amendement_hash.alias('hash')).where(sql_amendement_hash << amendement_hashes)]
         missing_amendement_hashes = set(amendement_hashes) - set(db_amendement_hashes)
