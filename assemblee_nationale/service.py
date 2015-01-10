@@ -76,9 +76,11 @@ class QuestionSearchService(object):
         next_url = "http://www2.assemblee-nationale.fr" + next_url
         return parse_question_search_result(next_url, requests.get(next_url).content)
 
-    def iter(self, legislature=None, size=None):
+    def iter(self, legislature=None, size=10):
         # First get total number of pages
         search_results = self.get(legislature=legislature, size=size)
+        yield search_results
 
         for start in range(1, search_results['total_count'], size):
-            yield self._get_next(search_results['next_url'])
+            search_results = self._get_next(search_results['next_url'])
+            yield search_results
