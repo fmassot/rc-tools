@@ -65,7 +65,7 @@ class QuestionSearchService(object):
             'removed[]': None # 0,1
         }
 
-    def _get(self, legislature=None, is_answered=None, is_removed=None, size=None):
+    def _get(self, legislature=14, is_answered=None, is_removed=None, size=10):
         params = self.default_params.copy()
 
         if is_answered:
@@ -79,15 +79,18 @@ class QuestionSearchService(object):
 
         return requests.post(self.base_url, data=params)
 
-    def get(self, legislature=None, is_answered=None, is_removed=None, size=10):
+    def get(self, legislature=14, is_answered=None, is_removed=None, size=10):
         response = self._get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
         return parse_question_search_result(response.url, response.content)
+
+    def total_count(self, legislature=14, is_answered=None, is_removed=None):
+        return self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=1)['total_count']
 
     def _get_next(self, next_url):
         next_url = "http://www2.assemblee-nationale.fr" + next_url
         return parse_question_search_result(next_url, requests.get(next_url).content)
 
-    def iter(self, legislature=None, is_answered=None, is_removed=None, size=10):
+    def iter(self, legislature=14, is_answered=None, is_removed=None, size=10):
         # First get total number of pages
         search_results = self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
         yield search_results

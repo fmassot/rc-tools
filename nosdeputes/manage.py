@@ -11,8 +11,8 @@ sys.path.append(str(Path(__file__).absolute().parents[1]))
 import click
 
 from peewee import SQL
-from assemblee_nationale.service import AmendementSearchService
-from nosdeputes.model import Amendement
+from assemblee_nationale.service import AmendementSearchService, QuestionSearchService
+from nosdeputes.model import Amendement, QuestionEcrite
 from nosdeputes.parsing.amendement_parsing import amendement_hash
 
 
@@ -40,11 +40,11 @@ def make_liasse(texteloi_id, output_filename):
 @click.option('--start-date')
 @click.option('--end-date')
 @click.option('--size', type=int, default=1000)
-@click.option('--output-file', default="missing_urls.txt")
+@click.option('--output-file', default="missing_amendement_urls.txt")
 def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
     service = AmendementSearchService()
 
-    print u'Nombre total d\'amendement à checker : %s' % service.total_count(start_date, end_date=end_date)
+    print u'Nombre total d\'amendement à checker : %s' % service.total_count(start_date=start_date, end_date=end_date)
 
     amendements_summary_iterator = service.iter(start_date=start_date, end_date=end_date, size=size)
 
@@ -67,6 +67,36 @@ def check_if_amendement_are_in_db(start_date, end_date, size, output_file):
     with open(output_file, 'w') as f:
         f.write('\n'.join(all_missing_urls))
 
+
+@cli.command()
+@click.option('--legislature', type=int, default=14)
+@click.option('--is-removed', type=bool, default=None)
+@click.option('--is-answered', type=bool, default=None)
+@click.option('--size', type=int, default=1000)
+@click.option('--output-file', default="missing_question_urls.txt")
+def check_if_questions_are_in_db(legislature, is_removed, is_answered, size, output_file):
+    service = QuestionSearchService()
+
+    print u'Nombre total de questions à checker : %s' % service.total_count(legislature=legislature, is_answered=is_answered, is_removed=is_removed)
+
+    search_iterator = service.iter(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
+
+    all_missing_urls = []
+
+    for i, search_result in enumerate(search_iterator):
+        print "Page %s / %s" % (i, search_result['total_count'] / size)
+        question_urls = map(lambda q: q['url'], search_result['results'])
+        db_question_urls = [q.source for q in QuestionEcrite.select().where(QuestionEcrite.source << question_urls)]
+        missing_urls = set(question_urls) - set(db_question_urls)
+        for missing_url in missing_urls:
+            print u'Question manquante : %s' % missing_url
+
+        all_missing_urls += list(missing_urls)
+
+    print u'Nombre total de questions manquantes : %s' % len(all_missing_urls)
+
+    with open(output_file, 'w') as f:
+        f.write('\n'.join(all_missing_urls))
 
 if __name__ == '__main__':
     cli()
