@@ -87,7 +87,8 @@ class QuestionSearchService(object):
     def total_count(self, legislature=14, is_answered=None, is_removed=None):
         return self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=1).total_count
 
-    def _get_next(self, next_url):
+    @staticmethod
+    def _get_next(next_url):
         next_url = "http://www2.assemblee-nationale.fr" + next_url
         return parse_question_search_result(next_url, requests.get(next_url).content)
 

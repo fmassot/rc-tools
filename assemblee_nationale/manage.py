@@ -36,7 +36,7 @@ def show_amendements_order(id_dossier, id_examen):
 def show_amendements_summary(start_date, end_date, numero):
     response = AmendementSearchService().get(start_date=start_date, end_date=end_date, numero=numero)
     for result in response.results:
-        print json.dumps(dict(result.__dict__), indent=4, sort_keys=True, ensure_ascii=False)
+        print json.dumps(result.__dict__, indent=4, sort_keys=True, ensure_ascii=False)
 
 
 @cli.command()
