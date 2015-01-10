@@ -56,10 +56,31 @@ class AmendementSummary(object):
         self.legislature = legislature
 
 
-class AmendementSummaryResult(object):
+class AmendementSearchResult(object):
     def __init__(self, url=None, total_count=None, start=None, size=None, results=None):
         self.url = url
         self.total_count = total_count
         self.start = start
+        self.size = size
+        self.results = results
+        
+        
+class QuestionSummary(object):
+    def __init__(self, url=None, legislature=None, numero=None, question_type=None, author=None, tags=None, publication_date=None, answer_date=None):
+        self.url = url
+        self.legislature = legislature
+        self.numero = numero
+        self.question_type = question_type
+        self.author = author
+        self.tags = tags
+        self.publication_date = publication_date
+        self.answer_date = answer_date
+        
+
+class QuestionSearchResult(object):
+    def __init__(self, url=None, total_count=None, next_url=None, size=None, results=None):
+        self.url = url
+        self.total_count = total_count
+        self.next_url = next_url
         self.size = size
         self.results = results

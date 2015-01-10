@@ -4,7 +4,7 @@ import re
 
 from bs4 import BeautifulSoup, NavigableString
 
-from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSummaryResult
+from assemblee_nationale.model import AmendementSummary, Amendement, AmendementSearchResult
 
 
 def convert_camelcase_to_underscore(name):
@@ -35,7 +35,7 @@ def parse_amendements_summary(url, json_response):
         amd.legislature = re.search('www.assemblee-nationale.fr/(\d+)/', amd.url_amend).groups()[0]
         amendements.append(amd)
 
-    return AmendementSummaryResult(**{
+    return AmendementSearchResult(**{
         'url': url,
         'total_count': json_response['infoGenerales']['nb_resultats'],
         'start': json_response['infoGenerales']['debut'],

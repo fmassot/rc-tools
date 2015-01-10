@@ -84,8 +84,8 @@ def check_if_questions_are_in_db(legislature, is_removed, is_answered, size, out
     all_missing_urls = []
 
     for i, search_result in enumerate(search_iterator):
-        print "Page %s / %s" % (1 + i, search_result['total_count'] / size)
-        question_urls = map(lambda q: q['url'], search_result['results'])
+        print "Page %s / %s" % (1 + i, search_result.total_count / size)
+        question_urls = map(lambda q: q.url, search_result.results)
         db_question_urls = [q.source for q in QuestionEcrite.select().where(QuestionEcrite.source << question_urls)]
         missing_urls = set(question_urls) - set(db_question_urls)
         for missing_url in missing_urls:

@@ -85,7 +85,7 @@ class QuestionSearchService(object):
         return parse_question_search_result(response.url, response.content)
 
     def total_count(self, legislature=14, is_answered=None, is_removed=None):
-        return self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=1)['total_count']
+        return self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=1).total_count
 
     def _get_next(self, next_url):
         next_url = "http://www2.assemblee-nationale.fr" + next_url
@@ -96,7 +96,7 @@ class QuestionSearchService(object):
         search_results = self.get(legislature=legislature, is_answered=is_answered, is_removed=is_removed, size=size)
         yield search_results
 
-        for start in range(1, search_results['total_count'], size):
-            if search_results['next_url'] is not None:
-                search_results = self._get_next(search_results['next_url'])
+        for start in range(1, search_results.total_count, size):
+            if search_results.next_url is not None:
+                search_results = self._get_next(search_results.next_url)
                 yield search_results

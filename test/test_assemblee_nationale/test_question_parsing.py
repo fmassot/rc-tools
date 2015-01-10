@@ -30,9 +30,9 @@ class QuestionParsingTest(unittest.TestCase):
         response = requests.post(url, data={'legislature': 13, 'limit': 5})
         parsing_result = parse_question_search_result(url, response.content)
 
-        self.assertEquals(138598, parsing_result['total_count'])
+        self.assertEquals(138598, parsing_result.total_count)
         # always size at 25
-        self.assertEquals(5, len(parsing_result['results']))
+        self.assertEquals(5, len(parsing_result.results))
 
 
 if __name__ == '__main__':
