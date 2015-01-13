@@ -23,7 +23,7 @@ def parse_amendements_summary(url, json_response):
       data_table: 'id|numInit|titreDossierLegislatif|urlDossierLegislatif|instance|numAmend|urlAmend|designationArticle|designationAlinea|dateDepot|signataires|sort'
     }
 
-    NB : the json response does not contain the dispositif and expose
+    NB : the json response does not contain the dispositif and expose, that's why we call it "amendement's summary"
     """
 
     amendements = []
