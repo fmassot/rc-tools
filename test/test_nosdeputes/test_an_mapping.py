@@ -5,7 +5,7 @@ import unittest
 
 import requests
 
-from assemblee_nationale.parsing.amendement_parser import parse_amendement
+from anpy.parsing.amendement_parser import parse_amendement
 from nosdeputes.mapping.an_mapping import an_to_nd_amendement_mapper
 
 

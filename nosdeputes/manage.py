@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import click
 import codecs
+import re
 import sys
 
 from pathlib import Path
+from peewee import SQL
 
+from anpy.service import AmendementSearchService, QuestionSearchService
+from anpy.parsing.question_parser import parse_question, field_order
 
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
-import click
-
-from peewee import SQL
-from assemblee_nationale.service import AmendementSearchService, QuestionSearchService
 from nosdeputes.model import Amendement, QuestionEcrite
 from nosdeputes.parsing.amendement_parsing import amendement_hash
 
@@ -19,6 +20,7 @@ from nosdeputes.parsing.amendement_parsing import amendement_hash
 @click.group()
 def cli():
     pass
+
 
 @cli.command()
 @click.argument('texteloi_id')
@@ -97,6 +99,14 @@ def check_if_questions_are_in_db(legislature, is_removed, is_answered, size, out
 
     with open(output_file, 'w') as f:
         f.write('\n'.join(all_missing_urls))
+
+
+@cli.command()
+@click.argument()
+def print_parsed_question(filepath):
+    url = re.sub(r'^.*/([^/]+)$', r'\1', filepath).replace('_', '/')
+    parsed_data = parse_question(url, open(filepath, 'r').read())
+    print "{%s}" % ", ".join('"%s": "%s"' % (k, parsed_data[k]) for k in field_order)
 
 if __name__ == '__main__':
     cli()

@@ -15,24 +15,6 @@ python -m unittest discover
 
 ## Commands :
 
-### Assemblee nationale
-
-* Show a amendement given its url :
-
-```python
-python assemblee_nationale/manage.py show_amendement http://www.assemblee-nationale.fr/14/amendements/1847/CION-DVP/CD266.asp
-```
-
-* Print amendements order for a given id_dossier and id_examen :
-
-```python
-python assemblee_nationale/manage.py show_amendements_order 33299 4073
-```
-
-* Show some amdements after a given date :
-```python
-python assemblee_nationale/manage.py show_amendements 2014-06-01
-```
 
 ### Nosdeputes
 

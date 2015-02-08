@@ -7,6 +7,10 @@ from nosdeputes.parsing.amendement_parsing import parse_amendement_sort, parse_d
 
 
 def an_to_nd_amendement_mapper(an_amendement):
+    """
+    :param an_amendement: anpy.model.Amendement
+    :return: nosdeputes.model.Amendement
+    """
     amendement = Amendement()
 
     parsed_url_data = parse_amendement_url(an_amendement.url)

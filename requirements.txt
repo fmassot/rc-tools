@@ -6,3 +6,4 @@ requests==2.5.0
 addict==0.2.7
 peewee==2.4.5
 enum34==1.0.4
+anpy==0.1.1dev
