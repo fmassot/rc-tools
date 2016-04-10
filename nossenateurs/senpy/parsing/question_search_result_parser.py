@@ -14,7 +14,7 @@ def extract_total_count(soup):
 
 
 def parse_question_search_result(url, html_content):
-    soup = BeautifulSoup(html_content)
+    soup = BeautifulSoup(html_content, "html5lib")
 
     search_result = QuestionSearchResult(**{
         'url': url,

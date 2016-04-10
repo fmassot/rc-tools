@@ -10,29 +10,44 @@ __all__ = ['QuestionSearchService']
 
 class QuestionSearchService(object):
     def __init__(self):
-        self.search_url = "http://www.senat.fr/basile/rechercheQuestion.do?off=10&rch=qa&de=20150403&au=20160403&dp=1+an&radio=dp&appr=text&aff=ar&tri=dd&_na=QG"
+        self.search_url = "http://www.senat.fr/basile/rechercheQuestion.do"
         self.size = 10
-        self.start_params = {
+        self.default_params = {
             'off': 0,
             'rch': 'qa',
-            'de': '20150403',
-            'au': '20160403',
+            'de': '20150101',
+            'au': '20150201',
             'dp': '1 an',
-            'radio': 'dp',
+            'radio': 'deau',
             'appr': 'text',
             'aff': 'ar',
             'tri': 'dd',
-            '_na': 'QG'
+            '_na': 'QG',
+            'afd': 'ppr',
         }
 
     def get(self, params):
-        return parse_question_search_result(requests.get(self.search_url, params=params).content)
+        content = requests.get(self.search_url, params=params).content
+        return parse_question_search_result(self.search_url, content)
 
-    def iter(self):
-        search_results = self.get(self.start_params)
+    def total_count(self, _params=None):
+        params = self.default_params.copy()
+
+        if _params:
+            params.update(_params)
+
+        return self.get(params).total_count
+
+    def iter(self, _params=None):
+        params = self.default_params.copy()
+
+        if _params:
+            params.update(_params)
+
+        search_results = self.get(params)
+
         yield search_results
 
         for start in range(1, search_results.total_count, self.size):
-            params = self.start_params.copy()
-            next_params = params['off'] = (params['off'][0] + 10)
-            yield self.get(next_params)
+            params['off'] = start * 10
+            yield self.get(params)

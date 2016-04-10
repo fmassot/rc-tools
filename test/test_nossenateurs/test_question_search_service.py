@@ -8,6 +8,7 @@ def test_service():
     iterator = service.iter()
     search_result = iterator.next()
 
-    assert 330 == search_result.total_count
-    assert 10 == search_result.size
+    assert 21 == search_result.total_count
+    print search_result.results
+    assert 10 == len(search_result.results)
 
