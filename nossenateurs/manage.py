@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import click
-import codecs
-import re
 import sys
 
 from pathlib import Path
-from peewee import SQL
 
 sys.path.append(str(Path(__file__).absolute().parents[1]))
 
@@ -41,7 +38,7 @@ def check_if_qag_are_in_db(start_date, end_date, output_file):
 
         for result in search_result.results:
             if result.url not in urls:
-                print result
+                all_missing_urls.append(result.url)
 
     with open(output_file, 'w') as f:
         f.write('\n'.join(all_missing_urls))
