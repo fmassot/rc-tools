@@ -412,6 +412,9 @@ class Texteloi(BaseModel):
 
 
 class TitreLoi(BaseModel):
+    """
+    Empty table
+    """
     chapitre = CharField(null=True)
     created_at = DateTimeField()
     date = DateField(null=True)
