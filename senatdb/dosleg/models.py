@@ -99,7 +99,15 @@ class Ble(BaseModel):
 
 class Bur(BaseModel):
     """
-    pluriel, singulier, féminin etc. pour AUCUNSEN, PDTSE, QUESTESEN, SECRETSEN, VICPDTSEN
+    Fonction au sein du bureau
+
+      burcod   |         burlib
+    -----------+-------------------------
+     AUCUNSEN  |
+     PDTSEN    | Président du Sénat
+     QUESTESEN | Questeur du Sénat
+     SECRETSEN | Secrétaire du Sénat
+     VICPDTSEN | Vice-président du Sénat
     """
     burcod = CharField(primary_key=True)
     burlib = CharField(null=True)
@@ -141,7 +149,45 @@ class Catrap(BaseModel):
 
 class TyporgSen(BaseModel):
     """
-    Type organisation : Comité, Commission permanente, Délégation, Groupe d'études, Groupe interparlementaire d'amitié, Office parlementaire
+      typorgcod  |                                   typorglib
+    -------------+--------------------------------------------------------------------------------
+     COMITE      | Comité
+     AUCUN       | (aucun)
+     AUTRES      | Autres organismes
+     COM         | Commission permanente
+     DELEGA      | Délégation
+     ETUDES      | Groupe d'études
+     GRPSEN      | Groupe interparlementaire d'amitié
+     OFFICE      | Office parlementaire
+     ORGEXT      | Organisme Extra-Parlementaire
+     CONEUR      | Conseil de l'Europe et UEO
+     GRPPOL      | Groupe politique
+     COUJUSREP   | Cour de Justice de la République
+     SENAT       | Sénat
+     CONCST      | Conseil Constitutionnel
+     BUR         | Bureau du Sénat
+     MINIST      | Ministère
+     COMENQ      | Commission d'enquête
+     MISINF      | Mission d'information
+     MISINFCOM   | Mission commune d'information
+     PARPOL      | Parti politique
+     COMPOU      | Commission de poursuite
+     COMADHOC    | Commission ad'hoc
+     CMP         | Commission mixte paritaire
+     ETUDESSCN   | Section d'un groupe d'études
+     OBS         | Observatoire
+     COMEUR      | Commission européenne
+     MISCOM      | Mission commune
+     MECSS       | Mission d'évaluation et de contrôle de la sécurité sociale
+     GRPSENSCN   | Section d'un Groupe interparlementaire d'amitié
+     CSCE        | Conférence sur la sécurité et la coopération en Europe
+     GRPPOLNI    | Groupe politique des Non Inscrits
+     COMSPE      | Commission spéciale
+     HAUCOUJUS   | Haute Cour de Justice
+     COMSPEAPU   | Commission spéciale chargée du contrôle des comptes et de l'évaluation interne
+     COMAPLEG    | Commission en charge de l'application des lois
+     COMSENCOMMU | Commission du Sénat de la Communauté
+     GRPLIAISON  | Groupe de liaison
     """
     evetempub = CharField(null=True)
     syscredat = DateTimeField(null=True)
@@ -215,6 +261,8 @@ class DateSeance(BaseModel):
 
 class Deccoc(BaseModel):
     """
+    Avis CC ?
+
      01        | conforme
      02        | partiellement conforme
      03        | non conforme
@@ -357,6 +405,7 @@ class Ses(BaseModel):
     class Meta:
         db_table = 'ses'
 
+
 class Typdoc(BaseModel):
     """
     Type de document
@@ -487,7 +536,20 @@ class Ecr(BaseModel):
 
 class Etadebman(BaseModel):
     """
-    Election, Réelection, Remplace, Renouvellement...
+     etadebmancod |            etadebmanlic
+    --------------+-------------------------------------
+     ELECTION     | Election
+     REELECTION   | Réélection
+     REMPLACE     | Remplace
+     REN          | Renouvellement
+     REN1         | Renouvellement 1
+     REN2         | Renouvellement 2
+     REN3         | Renouvellement 3
+     REN4         | Renouvellement 4
+     REN5         | Renouvellement 5
+     REN6         | Renouvellement 6
+     REN7         | Renouvellement 7
+     REPRISE      | Reprise suite à fin fon. membre Gvt
     """
     etadebmancod = CharField(primary_key=True)
     etadebmanlib = CharField()
@@ -717,7 +779,7 @@ class Sen(BaseModel):
 
 class Elusen(BaseModel):
     """
-    Sénateurs élus
+    Mandat sénateur
     """
     dptnum = ForeignKeyField(db_column='dptnum', rel_model=Dpt, to_field='dptnum')
     eluanndeb = BigIntegerField(null=True)
@@ -761,6 +823,9 @@ class Etaloi(BaseModel):
 
 
 class Evtsea(BaseModel):
+    """
+    12 lignes dans cette table, 11 motion référendaire, 1 document produit en séance
+    """
     evtseacle = BigIntegerField(primary_key=True)
     evtseadat = DateTimeField(null=True)
     lecassidt = CharField(index=True)
@@ -773,6 +838,8 @@ class Evtsea(BaseModel):
 
 class Foncom(BaseModel):
     """
+    Fonction dans commission
+
       foncomcod   |          foncomlic
     --------------+------------------------------
      MEMBRECOM    | Membre
@@ -811,6 +878,8 @@ class Foncom(BaseModel):
 
 class Fondelega(BaseModel):
     """
+    Fonction dans délégation
+
       fondelcod   |                     fondellic
     --------------+---------------------------------------------------
      PDTDRTDEL    | Président de droit
@@ -982,7 +1051,7 @@ class Fonmemdelega(BaseModel):
 
 class Typapppol(BaseModel):
     """
-    Lien entre sénateur et groupe politique
+    Type de lien entre sénateur et groupe politique
      typapppolcod | typapppollib
     --------------+--------------
      N            | Membre
@@ -1157,6 +1226,7 @@ class Libcom(BaseModel):
         indexes = (
             (('orgcod', 'libcomdatdeb'), True),
         )
+
 
 class Libdelega(BaseModel):
     evelib = CharField(null=True)
@@ -1436,6 +1506,8 @@ class Orippr(BaseModel):
 
 class Oritxt(BaseModel):
     """
+    Origine du texte
+
      oritxtcod | oritxtlib
     -----------+---------------------------------------------------------------------------------------------------------------
      26        | considéré comme modifié par l'Assemblée nationale en application de l'article 49, alinéa 3, de la Constitution
@@ -1491,6 +1563,8 @@ class Oritxt(BaseModel):
 
 class Posvot(BaseModel):
     """
+    Position vote
+
      posvotcod | posvotlib
     -----------+------------
      1         | pour
