@@ -15,8 +15,7 @@ python -m unittest discover
 
 ## Commands :
 
-
-### Nosdeputes
+### NosDéputés.fr
 
  * Print and save in missing_urls.txt amendements which are not in nosdeputes database :
 
@@ -28,4 +27,12 @@ python nosdeputes/manage.py check_if_amendement_are_in_db 2012-01-01 --end-date 
 
 ```python
 python nosdeputes/manage.py make_liasse 2173
+```
+
+### NosSénateurs.fr
+
+ * Print and save in missing_urls.txt questions which are not in nossenateurs database :
+
+```python
+python nossenateurs/manage.py check_if_questions_are_in_db 2016-01-01
 ```
